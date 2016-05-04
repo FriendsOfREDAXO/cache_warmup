@@ -28,7 +28,7 @@
 
             var url = $(this).attr('href');
             var title = 'Cache Warmup';
-            var parameters = 'left=' + (screen.width - 650) + ', top=50, height=400, width=600, menubar=no, location=no, resizable=no, status=no, scrollbars=yes';
+            var parameters = 'left=' + (screen.width - 650) + ', top=50, height=420, width=600, menubar=no, location=no, resizable=no, status=no, scrollbars=yes';
 
             if (popup == null || popup.closed) {
                 popup = window.open(url, title, parameters);
