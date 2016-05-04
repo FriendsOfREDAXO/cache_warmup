@@ -1,4 +1,22 @@
-cache-warmup_title = Cache Warmup
-cache-warmup_description = Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
+cache-warmup_title            = Cache Warmup
+cache-warmup_description      = Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
 
-cache-warmup_button = Cache jetzt generieren
+cache-warmup_button-start     = Cache jetzt generieren
+cache-warmup_button-success   = Prima, danke!
+cache-warmup_button-cancel    = Abbrechen
+cache-warmup_button-again     = Nochmal versuchen
+
+cache-warmup_step-1-title     = Schritt 1: Generiere Bilder…
+cache-warmup_step-1-progress  = Bild {0} von {1}
+
+cache-warmup_step-2-title     = Schritt 2: Generiere Seiten…
+cache-warmup_step-2-progress  = Seite {0} von {1}
+
+cache-warmup_time-elapsed     = Verstrichene Zeit
+
+cache-warmup_finished-title   = Fertig: Cache generiert
+cache-warmup_finished-text    = Der Cache wurde für <strong>{0}</strong> vorbereitet. Das hat etwa <strong>{1}</strong> gedauert, und es hat dafür gesorgt, dass nun niemand mehr bei den ersten Seitenaufrufen unnötig lange warten muss.
+
+cache-warmup_error-title      = Verdammt, das hat nicht geklappt!
+cache-warmup_error-text-1     = Beim Erzeugen von Bildern ist der Vorgang abgebrochen. Das liegt vermutlich daran, dass <strong>zu wenig Arbeitsspeicher</strong> auf dem Webserver verfügbar ist.
+cache-warmup_error-text-2     = <strong>Achtung:</strong> Dieser Fehler wird auch beim Aufruf der Website auftreten. Um dies zu vermeiden, müssen die betroffenen Bilder im Medienpool verkleinert werden!

@@ -1,4 +1,22 @@
-cache-warmup_title = Cache Warmup
-cache-warmup_description = Generates cache files in advance to improve the initial website performance. 
+cache-warmup_title            = Cache Warmup
+cache-warmup_description      = Generates cache files in advance to improve the initial website performance.
 
-cache-warmup_button = Generate cache
+cache-warmup_button-start     = Generate cache
+cache-warmup_button-success   = Cool, thanks!
+cache-warmup_button-cancel    = Cancel
+cache-warmup_button-again     = Try again
+
+cache-warmup_step-1-title     = Step 1: Generate images…
+cache-warmup_step-1-progress  = Image {0} of {1}
+
+cache-warmup_step-2-title     = Step 2: Generate pages…
+cache-warmup_step-2-progress  = Page {0} of {1}
+
+cache-warmup_time-elapsed     = Time elapsed
+
+cache-warmup_finished-title   = Finished: cache prepared
+cache-warmup_finished-text    = The cache has been prepared for <strong>{0}</strong>. It took some <strong>{1}</strong> and will save users from waiting too long when calling up the website for the first time.
+
+cache-warmup_error-title      = Damn, something went wrong!
+cache-warmup_error-text-1     = An error occured while generating images. This may have been caused by the web server <strong>running out of memory</strong>.
+cache-warmup_error-text-2     = <strong>Caution:</strong> the issue will also come up when accessing the web page. In order to avoid it, you’ll need to check on the affected images in the mediapool.
