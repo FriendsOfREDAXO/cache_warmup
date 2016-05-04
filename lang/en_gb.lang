@@ -1,4 +1,0 @@
-cache-warmup_title = Cache Warmup
-cache-warmup_description = Generates cache files in advance to improve the initial website performance. 
-
-cache-warmup_button = Generate cache

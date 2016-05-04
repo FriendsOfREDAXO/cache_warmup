@@ -1,4 +1,0 @@
-cache-warmup_title = Cache Warmup
-cache-warmup_description = Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
-
-cache-warmup_button = Cache jetzt generieren
