@@ -18,10 +18,11 @@ pages:
         perm: admin
         popup: true
         hidden: true
+    generator:
+        title: generator
+        perm: admin
+        hidden: true
+        hasLayout: false
 
 requires:
-    redaxo: ^5.0
-    packages:
-        media_manager: ^2.0
-    php:
-        extensions: [gd]
+    redaxo: '>=5.0'
