@@ -144,9 +144,14 @@ $footer4 = '
 </div>';
 
 
-
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'cache-warmup');
 $fragment->setVar('body', $content1, false);
 $fragment->setVar('footer', $footer1, false);
 echo $fragment->parse('core/page/section.php');
+
+
+
+/* inject cache warmup items JSON */
+
+echo '<script>var cacheWarmup = ' . cache_warmup_writer::buildJSON(cache_warmup_selector::prepareCacheItems()) . ';</script>';

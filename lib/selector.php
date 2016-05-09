@@ -2,13 +2,29 @@
 
 /**
  * Class cache_warmup_selector
+ * Selects images, media types, pages and languages
  */
 abstract class cache_warmup_selector
 {
+
+    /**
+     * Prepare all cache items
+     *
+     * @return array
+     */
+    public static function prepareCacheItems()
+    {
+        return array(
+            'images' => cache_warmup_selector::getChunkedImagesArray(),
+            'pages' => cache_warmup_selector::getChunkedPagesArray()
+        );
+    }
+
+
     /**
      * Get all images being used in REDAXO (pages, meta, yforms)
      * »X never, ever marks the spot.« (-- Indiana Jones)
-     * 
+     *
      * @return array
      * @throws rex_sql_exception
      */
@@ -112,9 +128,10 @@ abstract class cache_warmup_selector
         }
     }
 
+
     /**
      * Filter images: remove duplicate images and non-image items
-     * 
+     *
      * @param array $items
      * @return array
      */
@@ -134,23 +151,38 @@ abstract class cache_warmup_selector
         return $filteredImages;
     }
 
+
     /**
-     * Get all images as chunked array including 'count' and 'items'
-     * 
+     * Get all images and mediatypes as chunked array including 'count' and 'items'
+     *
      * @return array
      */
     public static function getChunkedImagesArray()
     {
-        $items = self::getImages();
-        if (count($items) > 0) {
+        $images = self::getImages();
+        $mediaTypes = self::getMediaTypes();
+
+        if (count($images) > 0 && count($mediaTypes) > 0) {
+
+            $items = array();
+            foreach($images as $image) {
+                foreach($mediaTypes as $type) {
+                    $items[] = array(
+                        'i' => $image,
+                        't' => $type
+                    );
+                }
+            }
+
             $chunkedItems = self::chunk($items, rex_addon::get('cache-warmup')->getConfig('chunkSizeImages'));
-            return array('images' => array('count' => count($items), 'items' => $chunkedItems));
+            return array('count' => count($items), 'items' => $chunkedItems);
         }
     }
 
+
     /**
      * Get all media types as defined in media manager addon
-     * 
+     *
      * @return array
      * @throws rex_sql_exception
      */
@@ -169,22 +201,10 @@ abstract class cache_warmup_selector
         }
     }
 
-    /**
-     * Get all media types as array including 'count' and 'items'
-     * 
-     * @return array
-     */
-    public static function getMediaTypesArray()
-    {
-        $items = self::getMediaTypes();
-        if (count($items) > 0) {
-            return array('mediaTypes' => array('count' => count($items), 'items' => $items));
-        }
-    }
 
     /**
      * Get all pages being online
-     * 
+     *
      * @return array
      * @throws rex_sql_exception
      */
@@ -203,19 +223,34 @@ abstract class cache_warmup_selector
         }
     }
 
+
     /**
-     * Get all pages as chunked array including 'count' and 'items'
-     * 
+     * Get all pages and languages as chunked array including 'count' and 'items'
+     *
      * @return array
      */
     public static function getChunkedPagesArray()
     {
-        $items = self::getPages();
-        if (count($items) > 0) {
+        $pages = self::getPages();
+        $languages = self::getLanguages();
+
+        if (count($pages) > 0 && count($languages) > 0) {
+
+            $items = array();
+            foreach($pages as $page) {
+                foreach($languages as $language) {
+                    $items[] = array(
+                        'p' => $page,
+                        'l' => $language
+                    );
+                }
+            }
+
             $chunkedItems = self::chunk($items, rex_addon::get('cache-warmup')->getConfig('chunkSizePages'));
-            return array('pages' => array('count' => count($items), 'items' => $chunkedItems));
+            return array('count' => count($items), 'items' => $chunkedItems);
         }
     }
+
 
     /**
      * Get all languages
@@ -227,18 +262,6 @@ abstract class cache_warmup_selector
         return rex_clang::getAllIds(true);
     }
 
-    /**
-     * Get all languages as array including 'count' and 'items'
-     *
-     * @return array
-     */
-    public static function getLanguagesArray()
-    {
-        $items = self::getLanguages();
-        if (count($items) > 0) {
-            return array('languages' => array('count' => count($items), 'items' => $items));
-        }
-    }
 
     /**
      * Split an array into chunks
@@ -250,16 +273,5 @@ abstract class cache_warmup_selector
     public static function chunk(array $items, $chunkSize = 3)
     {
         return array_chunk($items, $chunkSize);
-    }
-
-    /**
-     * Build JSON from array
-     *
-     * @param array $items
-     * @return string
-     */
-    public static function buildJSON(array $items)
-    {
-        return json_encode($items);
     }
 }

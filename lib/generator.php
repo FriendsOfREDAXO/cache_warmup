@@ -7,6 +7,9 @@ abstract class cache_warmup_generator
 {
 
     /**
+     * Prepare items in query string
+     * query string pattern: v1.v2,v1.v2,…
+     * 
      * @param string $items
      * @return array
      */
@@ -15,12 +18,9 @@ abstract class cache_warmup_generator
         $itemsArray = explode(',', $items);
         $filteredItemsArray = array();
 
-        // filter integers
         if (count($itemsArray) > 0) {
             foreach ($itemsArray as $item) {
-                if ((int)$item > 0 || $item === '0') {
-                    $filteredItemsArray[] = (int)$item;
-                }
+                $filteredItemsArray[] = explode('.', $item);
             }
         }
 
