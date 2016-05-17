@@ -165,12 +165,9 @@ abstract class cache_warmup_selector
         if (count($images) > 0 && count($mediaTypes) > 0) {
 
             $items = array();
-            foreach($images as $image) {
-                foreach($mediaTypes as $type) {
-                    $items[] = array(
-                        'i' => $image,
-                        't' => $type
-                    );
+            foreach ($images as $image) {
+                foreach ($mediaTypes as $type) {
+                    $items[] = array($image, $type);
                 }
             }
 
@@ -237,12 +234,9 @@ abstract class cache_warmup_selector
         if (count($pages) > 0 && count($languages) > 0) {
 
             $items = array();
-            foreach($pages as $page) {
-                foreach($languages as $language) {
-                    $items[] = array(
-                        'p' => $page,
-                        'l' => $language
-                    );
+            foreach ($pages as $page) {
+                foreach ($languages as $language) {
+                    $items[] = array($page, $language);
                 }
             }
 
