@@ -15,7 +15,7 @@ class cache_warmup_media_manager extends rex_media_manager
             $media_path = rex_path::media($rex_media_manager_file);
             $cache_path = rex_path::addonCache('media_manager');
 
-            $media = new rex_managed_media($media_path);
+            $media = new cache_warmup_managed_media($media_path);
             $media_manager = new self($media);
             $media_manager->setCachePath($cache_path);
             $media_manager->applyEffects($rex_media_manager_type);
@@ -23,15 +23,11 @@ class cache_warmup_media_manager extends rex_media_manager
         }
     }
 
-
     public function sendMedia()
     {
         $headerCacheFilename = $this->getHeaderCacheFilename();
         $CacheFilename = $this->getCacheFilename();
 
-        if (!$this->isCached()) {
-            rex_file::putCache($headerCacheFilename, $this->header);
-            rex_file::put($CacheFilename, $src);
-        }
+        $this->media->sendMedia($CacheFilename, $headerCacheFilename, false);
     }
 }
