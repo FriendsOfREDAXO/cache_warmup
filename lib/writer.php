@@ -38,6 +38,6 @@ abstract class cache_warmup_writer
      */
     public static function buildJSON(array $items)
     {
-        return json_encode($items, JSON_FORCE_OBJECT);
+        return json_encode($items);
     }
 }
