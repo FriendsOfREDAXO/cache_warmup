@@ -33,10 +33,11 @@
 
             var url = $(this).attr('href');
             var title = 'Cache Warmup';
-            var parameters = 'left=' + (screen.width - 650) + ', top=50, height=420, width=600, menubar=no, location=no, resizable=no, status=no, scrollbars=yes';
+            var parameters = 'left=' + (screen.width - 650) + ', top=50, height=471, width=600, menubar=no, location=no, resizable=no, status=no, scrollbars=yes';
 
             if (popup == null || popup.closed) {
                 popup = window.open(url, title, parameters);
+                popup.resizeTo(600, 470);
                 debug.log('open new popup: ', [title, url, parameters]);
             }
             else {
@@ -136,7 +137,7 @@
 
         Stopwatch.prototype = {
 
-            start: function (value = 0) {
+            start: function (value) {
                 debug.log('stopwatch: started at ' + value);
                 this._el = $(this._selector);
                 this._el.timer({
@@ -169,7 +170,7 @@
          * @param value
          * @constructor
          */
-        var Progressbar = function (selector, value = 0) {
+        var Progressbar = function (selector, value) {
             debug.info('new Progressbar at "' + selector + '" starting at ' + value);
 
             this._selector = selector;
@@ -578,27 +579,30 @@
 
         /* Cache warmup */
 
-        var cachewarmup = new CacheWarmup({
-            'itemsJSON': cacheWarmupItems,
-            'generatorUrl': window.location.origin + window.location.pathname + '?page=cache-warmup/generator',
-            'templates': [
-                'content_task', 'content_info',
-                'stopwatch', 'progressbar',
-                'title_pages', 'title_images', 'title_finished', 'title_error', 'title_nothing',
-                'progress_pages', 'progress_images',
-                'icon_finished', 'icon_error', 'icon_nothing',
-                'text_finished', 'text_error', 'text_nothing',
-                'error_link',
-                'button_success', 'button_again', 'button_cancel'
-            ],
-            'targets': [
-                'title', 'content', 'progressbar', 'footer', 'task', 'elapsed', 'icon', 'text'
-            ],
-            'components': {
-                'stopwatch': '#cache_warmup_time',
-                'progressbar': '.cache-warmup__progressbar'
-            }
-        });
+        if (cacheWarmupItems) {
+
+            var cachewarmup = new CacheWarmup({
+                'itemsJSON': cacheWarmupItems,
+                'generatorUrl': window.location.origin + window.location.pathname + '?page=cache-warmup/generator',
+                'templates': [
+                    'content_task', 'content_info',
+                    'stopwatch', 'progressbar',
+                    'title_pages', 'title_images', 'title_finished', 'title_error', 'title_nothing',
+                    'progress_pages', 'progress_images',
+                    'icon_finished', 'icon_error', 'icon_nothing',
+                    'text_finished', 'text_error', 'text_nothing',
+                    'error_link',
+                    'button_success', 'button_again', 'button_cancel'
+                ],
+                'targets': [
+                    'title', 'content', 'progressbar', 'footer', 'task', 'elapsed', 'icon', 'text'
+                ],
+                'components': {
+                    'stopwatch': '#cache_warmup_time',
+                    'progressbar': '.cache-warmup__progressbar'
+                }
+            });
+        }
 
     });
 })(jQuery);
