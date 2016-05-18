@@ -102,18 +102,20 @@ abstract class cache_warmup_selector
                 }
 
                 // find images in article metas
-                $sql->setQuery('SELECT ' . implode(',', $metainfos['names']) . ' FROM ' . rex::getTablePrefix() . 'article');
-                foreach ($sql as $row) {
-                    foreach ($metainfos['names'] as $field) {
-                        $files = $row->getValue($field);
-                        if (strpos($files, ',') > 0) {
-                            // is medialist
-                            foreach (explode(',', $files) as $file) {
-                                $images[] = $file;
+                if (isset($metainfos['names'])) {
+                    $sql->setQuery('SELECT ' . implode(',', $metainfos['names']) . ' FROM ' . rex::getTablePrefix() . 'article');
+                    foreach ($sql as $row) {
+                        foreach ($metainfos['names'] as $field) {
+                            $files = $row->getValue($field);
+                            if (strpos($files, ',') > 0) {
+                                // is medialist
+                                foreach (explode(',', $files) as $file) {
+                                    $images[] = $file;
+                                }
+                            } else {
+                                // is media
+                                $images[] = $files;
                             }
-                        } else {
-                            // is media
-                            $images[] = $files;
                         }
                     }
                 }
