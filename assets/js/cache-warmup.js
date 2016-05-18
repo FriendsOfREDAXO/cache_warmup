@@ -35,7 +35,7 @@
             var title = 'Cache Warmup';
             var parameters = 'left=' + (screen.width - 650) + ', top=50, height=471, width=600, menubar=no, location=no, resizable=no, status=no, scrollbars=yes';
 
-            if (popup == null || popup.closed) {
+            if (popup === null || popup.closed) {
                 popup = window.open(url, title, parameters);
                 popup.resizeTo(600, 470);
                 debug.log('open new popup: ', [title, url, parameters]);
@@ -579,7 +579,7 @@
 
         /* Cache warmup */
 
-        if (cacheWarmupItems) {
+        if (typeof cacheWarmupItems !== 'undefined') {
 
             var cachewarmup = new CacheWarmup({
                 'itemsJSON': cacheWarmupItems,
