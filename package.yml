@@ -8,21 +8,20 @@ page:
     perm: admin
     popup: true
     hidden: true
+    subpages:
+        warmup:
+            title: translate:title
+            popup: true
+            hidden: true
+        generator:
+            title: generator
+            hidden: true
+            hasLayout: false
 
 pages:
     system/cache-warmup:
         title: translate:title
         perm: admin
-    warmup:
-        title: translate:title
-        perm: admin
-        popup: true
-        hidden: true
-    generator:
-        title: generator
-        perm: admin
-        hidden: true
-        hasLayout: false
 
 requires:
-    redaxo: '>=5.0'
+    redaxo: '^5.0'
