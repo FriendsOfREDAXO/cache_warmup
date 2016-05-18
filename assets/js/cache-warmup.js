@@ -387,7 +387,8 @@
                                 .done(function (data, textStatus, jqXHR) {
                                     // special: error on success (http status 200)
                                     // media manager returns 200 even if an image cannot be generated (too big, RAM exceeded)
-                                    if (data.length) {
+                                    // we assume an error if response starts with rex-page-header
+                                    if (data.substr(0, 30) === '<header class="rex-page-header') {
                                         debug.error('cache: request error for ' + url.slug);
                                         that.parent.isError('RAM exceeded', 'internal', url.absolute);
                                     }
