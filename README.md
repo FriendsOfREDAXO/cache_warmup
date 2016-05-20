@@ -18,12 +18,12 @@ Das Cache-Warmup-Addon kann alle verwendeten Inhalte der Website vorab generiere
 
 Der Arbeitsspeicher des Webservers reicht nicht aus, um alle Bilder zu verarbeiten. Das wird übrigens auch die Website selbst betreffen, nicht nur das Cache-Warmup-Addon. Deshalb sollte nun unbedingt der Medienpool geprüft und alle übergroßen (betrifft Pixel, nicht Dateigröße) Bilder manuell verkleinert werden — oder alternativ der Arbeitsspeicher des Webservers vergrößert werden.
 
-Noch ein Hinweis zu Bildgrößen: Die Pixelwerte sind entscheidend dafür, wieviel RAM benötigt wird, damit REDAXOs Media Manager es verarbeiten kann. Ein Bild mit 4000 × 3000 px und 24 Bit Farbtiefe benötigt bereits 34 MB RAM. Soll daraus vom Media Manager ein Thumbnail in 1920 × 1440 px generiert werden, sind weitere 8 MB notwendig. Der Prozess selbst benötigt zudem (geschätzt) ein zusätzliches 1,5- bis 1,8-faches an Speicher, so dass nun insgesamt schon bis zu 75 MB erforderlich sind. Und natürlich benötigt auch REDAXO noch Speicher.  
-— Für dieses Beispiel benötigt der Webserver also mindestens 96 MB RAM, damit die Website fehlerfrei ausgeliefert werden kann.
+Noch ein Hinweis zu Bildgrößen: Die Pixelwerte sind entscheidend dafür, wieviel RAM benötigt wird, damit REDAXOs Media Manager es verarbeiten kann. Ein Bild mit 4000 × 3000 px und 24 Bit Farbtiefe benötigt bereits 34 MB RAM. Soll daraus vom Media Manager ein Thumbnail in 1920 × 1440 px generiert werden, sind weitere 8 MB notwendig. Der Prozess selbst benötigt zudem (geschätzt) ein zusätzliches 1,5- bis 1,8-faches an Speicher, so dass nun insgesamt schon bis zu 75 MB erforderlich sind. Und natürlich benötigt auch REDAXO selbst noch etwas Speicher.  
+— Für dieses Beispiel sollte der Webserver also über mindestens 80–90 MB RAM verfügen, damit die Website fehlerfrei ausgeliefert werden kann.
 
-Das Cache-Warmup-Addon ist also auch nützlich, um zu prüfen, ob die Ressourcen des Zielservers für die Generierung aller verwendeten Bilder ausreichen.
+🐿 __Protip:__ Das Cache-Warmup-Addon ist also auch nützlich, um zu prüfen, ob die Ressourcen des Webservers für die Auslieferung aller Bilder der Website ausreichen.
 
-### Ein anderer Fehler. Was hat der nun zu bedeuten?
+### Ein anderer Fehler als oben. Was hat der nun zu bedeuten?
 
 Es gibt viele weitere Fehler, die bei der Verwendung des Cache-Warmup-Addons auftreten können. Ein paar typische sind diese:
 
