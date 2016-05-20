@@ -36,7 +36,7 @@ Allgemeiner Fehler. Irgendwas ist schief gegangen. Die Fehlerseite zeigt hoffent
 * `Service Unavailable (503)`  
 Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die gesamte Website nicht. Bitte später nochmal versuchen oder prüfen, ob der Server und REDAXO okay sind!
 
-Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei [Github](https://github.com/FriendsOfREDAXO/cache-warmup/issues) gemeldet werden. Vielen Dank!
+💯 Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei [Github](https://github.com/FriendsOfREDAXO/cache-warmup/issues) gemeldet werden. Vielen Dank!
 
 ### Ich bin Entwickler*in. Was genau macht das Addon?
 
