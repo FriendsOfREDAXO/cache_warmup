@@ -375,6 +375,7 @@
                             // send request
                             return $.ajax({
                                     url: url.absolute,
+                                    cache: false,
                                     beforeSend: function () {
                                         // update components
                                         // why not after request? because from UX view it feels better beforehand.
