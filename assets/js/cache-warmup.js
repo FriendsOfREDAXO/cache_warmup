@@ -584,7 +584,7 @@
 
             var cachewarmup = new CacheWarmup({
                 'itemsJSON': cacheWarmupItems,
-                'generatorUrl': window.location.origin + window.location.pathname + '?page=cache-warmup/generator',
+                'generatorUrl': window.location.origin + window.location.pathname + '?page=cache_warmup/generator',
                 'templates': [
                     'content_task', 'content_info',
                     'stopwatch', 'progressbar',
