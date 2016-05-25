@@ -1,7 +1,7 @@
-package: cache-warmup
+package: cache_warmup
 version: '1.0.0-beta4'
 author: Friends Of REDAXO
-supportpage: https://github.com/FriendsOfREDAXO/cache-warmup
+supportpage: https://github.com/FriendsOfREDAXO/cache_warmup
 
 page:
     title: translate:title
@@ -19,7 +19,7 @@ page:
             hasLayout: false
 
 pages:
-    system/cache-warmup:
+    system/cache_warmup:
         title: translate:title
         perm: admin
 

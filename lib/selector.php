@@ -173,7 +173,7 @@ abstract class cache_warmup_selector
                 }
             }
 
-            $chunkedItems = self::chunk($items, rex_addon::get('cache-warmup')->getConfig('chunkSizeImages'));
+            $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
             return array('count' => count($items), 'items' => $chunkedItems);
         }
     }
@@ -242,7 +242,7 @@ abstract class cache_warmup_selector
                 }
             }
 
-            $chunkedItems = self::chunk($items, rex_addon::get('cache-warmup')->getConfig('chunkSizePages'));
+            $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
             return array('count' => count($items), 'items' => $chunkedItems);
         }
     }

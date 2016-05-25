@@ -1,25 +1,25 @@
-cache-warmup_title           = Cache-Warmup
-cache-warmup_description     = Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
+cache_warmup_title           = Cache-Warmup
+cache_warmup_description     = Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
 
-cache-warmup_button-start    = Cache jetzt generieren
-cache-warmup_button-success  = Prima, danke!
-cache-warmup_button-cancel   = Abbrechen
-cache-warmup_button-again    = Nochmal versuchen
+cache_warmup_button-start    = Cache jetzt generieren
+cache_warmup_button-success  = Prima, danke!
+cache_warmup_button-cancel   = Abbrechen
+cache_warmup_button-again    = Nochmal versuchen
 
-cache-warmup_pages-title     = Generiere Seiten…
-cache-warmup_pages-progress  = Seite <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_pages-title     = Generiere Seiten…
+cache_warmup_pages-progress  = Seite <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
 
-cache-warmup_images-title    = Generiere Bilder…
-cache-warmup_images-progress = Bild <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images-title    = Generiere Bilder…
+cache_warmup_images-progress = Bild <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
 
-cache-warmup_time-elapsed    = Verstrichene Zeit
+cache_warmup_time-elapsed    = Verstrichene Zeit
 
-cache-warmup_finished-title  = Fertig: Cache generiert
-cache-warmup_finished-text   = <p>Der Cache wurde für <strong><span class="cache-warmup__target__finished-pages-num">Seiten</span> <span class="cache-warmup__target__finished-join">und</span> <span class="cache-warmup__target__finished-images-num">Bilder</span></strong> vorbereitet. Das hat etwa <strong class="cache-warmup__target__finished-time-num"></strong> gedauert und sorgt dafür, dass nun niemand mehr bei den ersten Seitenaufrufen unnötig lange warten muss.</p>
+cache_warmup_finished-title  = Fertig: Cache generiert
+cache_warmup_finished-text   = <p>Der Cache wurde für <strong><span class="cache-warmup__target__finished-pages-num">Seiten</span> <span class="cache-warmup__target__finished-join">und</span> <span class="cache-warmup__target__finished-images-num">Bilder</span></strong> vorbereitet. Das hat etwa <strong class="cache-warmup__target__finished-time-num"></strong> gedauert und sorgt dafür, dass nun niemand mehr bei den ersten Seitenaufrufen unnötig lange warten muss.</p>
 
-cache-warmup_error-title     = Verdammt, etwas ist schief gelaufen!
-cache-warmup_error-text      = <p>Beim Erzeugen des Caches ist ein Fehler aufgetreten. Details befinden sich auf der Fehlerseite. Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei <a href="https://github.com/FriendsOfREDAXO/cache-warmup/issues">Github</a> gemeldet werden. Vielen Dank!</p>
-cache-warmup_error-link      = Link zur Fehlerseite
+cache_warmup_error-title     = Verdammt, etwas ist schief gelaufen!
+cache_warmup_error-text      = <p>Beim Erzeugen des Caches ist ein Fehler aufgetreten. Details befinden sich auf der Fehlerseite. Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues">Github</a> gemeldet werden. Vielen Dank!</p>
+cache_warmup_error-link      = Link zur Fehlerseite
 
-cache-warmup_nothing-title   = Keine Inhalte?
-cache-warmup_nothing-text    = <p>Tut mir leid, aber es gibt nichts zum Cachen. Keine Bilder und keine Texte. Entweder ist REDAXO leer, oder die notwendigen Addons (<code>media_manager</code> für Bilder und <code>structure</code> für Inhalte) sind nicht installiert.</p>
+cache_warmup_nothing-title   = Keine Inhalte?
+cache_warmup_nothing-text    = <p>Tut mir leid, aber es gibt nichts zum Cachen. Keine Bilder und keine Texte. Entweder ist REDAXO leer, oder die notwendigen Addons (<code>media_manager</code> für Bilder und <code>structure</code> für Inhalte) sind nicht installiert.</p>
