@@ -6,8 +6,10 @@
 class cache_warmup_media_manager extends rex_media_manager
 {
 
-    public static function init($file, $type)
+    public static function init()
     {
+        list($file, $type) = func_get_args();
+
         $rex_media_manager_file = $file;
         $rex_media_manager_type = $type;
 
