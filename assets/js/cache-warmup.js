@@ -27,8 +27,10 @@
         /* warmup popup */
 
         var popup = null;
+        var popupButton = $('.cache-warmup__button-start');
+        var warmupButton = $('#rex-page-cache-warmup-warmup');
 
-        $('.cache-warmup__button-start').on('click', function (e) {
+        popupButton.on('click', function (e) {
             e.preventDefault();
 
             var url = $(this).attr('href');
@@ -46,13 +48,13 @@
             }
         });
 
-        $('#rex-page-cache-warmup-warmup').on('click', '.cache-warmup__button--success, .cache-warmup__button--cancel', function (e) {
+        warmupButton.on('click', '.cache-warmup__button--success, .cache-warmup__button--cancel', function (e) {
             e.preventDefault();
             debug.log('close popup.');
             window.close();
         });
 
-        $('#rex-page-cache-warmup-warmup').on('click', '.cache-warmup__button--again', function (e) {
+        warmupButton.on('click', '.cache-warmup__button--again', function (e) {
             e.preventDefault();
             document.location.reload(true);
         });
@@ -132,7 +134,7 @@
             debug.info('new Stopwatch at "' + selector + '"');
 
             this._selector = selector;
-            this._el;
+            this._el = null;
         };
 
         Stopwatch.prototype = {
@@ -228,16 +230,18 @@
             this._initialConfig = config;
 
             this._init();
-            debug.info('new Calculator :', JSON.stringify(this._config));
+            debug.info('new Calculator :', JSON.stringify(this.config));
         };
 
         Calculator.prototype = {
 
             _init: function () {
-                this._config = {};
-                for (item in this._initialConfig) {
-                    this._config[item] = this._initialConfig[item];
-                    this._config[item].current = 0;
+                this.config = {};
+                for (var item in this._initialConfig) {
+                    if (this._initialConfig.hasOwnProperty(item)) {
+                        this.config[item] = this._initialConfig[item];
+                        this.config[item].current = 0;
+                    }
                 }
             },
 
@@ -247,17 +251,17 @@
             },
 
             registerNextChunk: function (type) {
-                this._config[type].current += 1;
-                debug.log('calculator: set ' + type + ' to ' + this._config[type].current + '/' + this._config[type].total + ', overall progress at ' + this.getProgress() + '% now');
+                this.config[type].current += 1;
+                debug.log('calculator: set ' + type + ' to ' + this.config[type].current + '/' + this.config[type].total + ', overall progress at ' + this.getProgress() + '% now');
                 return this;
             },
 
             getCurrent: function (type) {
-                return this._config[type].current;
+                return this.config[type].current;
             },
 
             getTotal: function (type) {
-                return this._config[type].total;
+                return this.config[type].total;
             },
 
             getProgress: function () {
@@ -267,9 +271,11 @@
             _calculateProgress: function () {
                 var finished = 0;
                 var total = 0;
-                for (type in this._config) {
-                    finished += this.getCurrent(type);
-                    total += this.getTotal(type);
+                for (var type in this.config) {
+                    if (this.config.hasOwnProperty(type)) {
+                        finished += this.getCurrent(type);
+                        total += this.getTotal(type);
+                    }
                 }
                 return Math.round(finished / total * 100);
             }
@@ -310,7 +316,7 @@
             },
 
             hasItems: function () {
-                return (Object.keys(this._items).length > 0) ? true : false;
+                return Object.keys(this._items).length > 0;
             },
 
             getNumOfItems: function (type) {
@@ -350,10 +356,11 @@
          * Cache
          * sends ajax request to generator file
          *
+         * @param cacheWarmup
          * @constructor
          */
-        var Cache = function (parent) {
-            this.parent = parent;
+        var Cache = function (cacheWarmup) {
+            this.cacheWarmup = cacheWarmup;
         };
 
         Cache.prototype = {
@@ -363,7 +370,7 @@
                 var timerEnd;
                 var executionTimes = [];
                 var that = this;
-                var urls = this.parent._config.getUrlsForType(type);
+                var urls = this.cacheWarmup.config.getUrlsForType(type);
                 var cachedItemsCount = 0;
 
                 if (urls.length) {
@@ -381,18 +388,18 @@
                                         // why not after request? because from UX view it feels better beforehand.
                                         debug.log('---');
                                         cachedItemsCount += url.itemsNum;
-                                        that.parent.content.setFromValue(cachedItemsCount);
-                                        that.parent.calculator.registerNextChunk(type);
-                                        that.parent.progressbar.setProgress(that.parent.calculator.getProgress());
+                                        that.cacheWarmup.content.setFromValue(cachedItemsCount);
+                                        that.cacheWarmup.calculator.registerNextChunk(type);
+                                        that.cacheWarmup.progressbar.setProgress(that.cacheWarmup.calculator.getProgress());
                                     }
                                 })
-                                .done(function (data, textStatus, jqXHR) {
+                                .done(function (data) {
                                     // special: error on success (http status 200)
                                     // media manager returns 200 even if an image cannot be generated (too big, RAM exceeded)
                                     // we assume an error if response starts with rex-page-header
                                     if (data.substr(0, 30) === '<header class="rex-page-header') {
                                         debug.error('cache: request error for ' + url.slug);
-                                        that.parent.isError('RAM exceeded', 'internal', url.absolute);
+                                        that.cacheWarmup.isError('RAM exceeded', 'internal', url.absolute);
                                     }
                                     else {
                                         // get debug infos
@@ -403,7 +410,7 @@
                                 })
                                 .fail(function (jqXHR, textStatus, errorThrown) {
                                     // throw up error message, statuscode and URL to page where error occured
-                                    that.parent.isError(errorThrown, jqXHR.status, url.absolute);
+                                    that.cacheWarmup.isError(errorThrown, jqXHR.status, url.absolute);
                                 });
                         });
                     }, Promise.resolve()).then(function () {
@@ -439,8 +446,8 @@
             debug.info('new CacheWarmup');
 
             // prepare config
-            this._config = new Config(config.itemsJSON, config.generatorUrl);
-            if (this._config.hasItems()) {
+            this.config = new Config(config.itemsJSON, config.generatorUrl);
+            if (this.config.hasItems()) {
 
                 // set up components
                 this.content = new Content(config);
@@ -464,10 +471,10 @@
 
             _prepareCalculatorConfig: function () {
                 var config = {};
-                var types = this._config.getItemTypes().toString().split(',');
+                var types = this.config.getItemTypes().toString().split(',');
                 if (types.length) {
                     types.forEach(function (entry) {
-                        config[entry] = {'total': this._config.getNumOfChunks(entry)}
+                        config[entry] = {'total': this.config.getNumOfChunks(entry)}
                     }, this);
                     return config;
                 }
@@ -490,14 +497,14 @@
                 // prepare and progress pages
                 this.content.injectTemplate('title', 'title_pages');
                 this.content.injectTemplate('task', 'progress_pages');
-                this.content.setToValue(this._config.getNumOfItems('pages'));
+                this.content.setToValue(this.config.getNumOfItems('pages'));
                 // callback hell starts here:
                 that.cache.generate('pages', function () {
 
                     // prepare and progress images
                     that.content.injectTemplate('title', 'title_images');
                     that.content.injectTemplate('task', 'progress_images');
-                    that.content.setToValue(that._config.getNumOfItems('images'));
+                    that.content.setToValue(that.config.getNumOfItems('images'));
                     that.cache.generate('images', function () {
 
                         that.stopwatch.pause();
@@ -525,19 +532,19 @@
                 this.content.removeElement('progressbar');
 
                 // inject generator values (processed items and timing)
-                if (this._config.getNumOfItems('pages')) {
-                    $('.cache-warmup__target__finished-pages-num').prepend(this._config.getNumOfItems('pages') + ' ');
+                if (this.config.getNumOfItems('pages')) {
+                    $('.cache-warmup__target__finished-pages-num').prepend(this.config.getNumOfItems('pages') + ' ');
                 }
                 else {
                     this.content.removeElement('finished-pages-num');
                 }
-                if (this._config.getNumOfItems('images')) {
-                    $('.cache-warmup__target__finished-images-num').prepend(this._config.getNumOfItems('images') + ' ');
+                if (this.config.getNumOfItems('images')) {
+                    $('.cache-warmup__target__finished-images-num').prepend(this.config.getNumOfItems('images') + ' ');
                 }
                 else {
                     this.content.removeElement('finished-images-num');
                 }
-                if (!(this._config.getNumOfItems('pages') && this._config.getNumOfItems('images'))) {
+                if (!(this.config.getNumOfItems('pages') && this.config.getNumOfItems('images'))) {
                     this.content.removeElement('finished-join');
                 }
                 this.content.injectContent('finished-time-num', stopwatchSnapshot);
@@ -582,7 +589,7 @@
 
         if (typeof cacheWarmupItems !== 'undefined') {
 
-            var cachewarmup = new CacheWarmup({
+            new CacheWarmup({
                 'itemsJSON': cacheWarmupItems,
                 'generatorUrl': window.location.origin + window.location.pathname + '?page=cache_warmup/generator',
                 'templates': [
