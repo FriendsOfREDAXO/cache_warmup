@@ -110,7 +110,7 @@ echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_wa
 
 
 <script id="cache_warmup_tpl_icon_nothing" type="text/x-handlebars-template">
-    <i class="fa fa-power-off fa-5x" aria-hidden="true"></i>
+    <i class="fa fa-user-md fa-5x" aria-hidden="true"></i>
 </script>
 
 
