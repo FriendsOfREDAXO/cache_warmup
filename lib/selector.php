@@ -165,19 +165,16 @@ abstract class cache_warmup_selector
         $images = self::getImages();
         $mediaTypes = self::getMediaTypes();
 
+        $items = array();
         if (count($images) > 0 && count($mediaTypes) > 0) {
-
-            $items = array();
             foreach ($images as $image) {
                 foreach ($mediaTypes as $type) {
                     $items[] = array($image, $type);
                 }
             }
-
-            $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
-            return array('count' => count($items), 'items' => $chunkedItems);
         }
-        return array();
+        $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
+        return array('count' => count($items), 'items' => $chunkedItems);
     }
 
 
@@ -237,19 +234,16 @@ abstract class cache_warmup_selector
         $pages = self::getPages();
         $languages = self::getLanguages();
 
+        $items = array();
         if (count($pages) > 0 && count($languages) > 0) {
-
-            $items = array();
             foreach ($pages as $page) {
                 foreach ($languages as $language) {
                     $items[] = array($page, $language);
                 }
             }
-
-            $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
-            return array('count' => count($items), 'items' => $chunkedItems);
         }
-        return array();
+        $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
+        return array('count' => count($items), 'items' => $chunkedItems);
     }
 
 
