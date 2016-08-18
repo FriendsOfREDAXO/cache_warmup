@@ -101,9 +101,14 @@ abstract class cache_warmup_selector
                     $metainfos['names'][] = $row->getValue('name');
                 }
 
-                // find images in article metas
+                // find images in metas (article, clang, media)
                 if (isset($metainfos['names'])) {
-                    $sql->setQuery('SELECT ' . implode(',', $metainfos['names']) . ' FROM ' . rex::getTablePrefix() . 'article');
+                    $tablesFrom = array(
+                        rex::getTablePrefix() . 'article',
+                        rex::getTablePrefix() . 'clang',
+                        rex::getTablePrefix() . 'media'
+                    );
+                    $sql->setQuery('SELECT ' . implode(',', $metainfos['names']) . ' FROM ' . implode(',', $tablesFrom));
                     foreach ($sql as $row) {
                         foreach ($metainfos['names'] as $field) {
                             $files = $row->getValue($field);
