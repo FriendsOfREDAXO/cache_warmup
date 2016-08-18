@@ -306,7 +306,7 @@
 
             _getDebugInfo: function () {
                 var info = '';
-                var types = this.getItemTypes().toString().split(',');
+                var types = this.getItemTypes();
                 if (types.length) {
                     types.forEach(function (entry) {
                         info += this.getNumOfItems(entry) + ' ' + entry + ' (' + this.getNumOfChunks(entry) + ' chunks), ';
@@ -316,15 +316,17 @@
             },
 
             hasItems: function () {
-                return Object.keys(this._items).length > 0;
+                return Object.keys(this._items).some(function(type) {
+                    return this._items[type].count > 0;
+                }, this);
             },
 
             getNumOfItems: function (type) {
-                return this._items[type] ? this._items[type].count : false;
+                return this._items[type] ? this._items[type].count : 0;
             },
 
             getNumOfChunks: function (type) {
-                return this._items[type] ? this._items[type].items.length : false;
+                return this._items[type].items ? this._items[type].items.length : 0;
             },
 
             getItemTypes: function () {
@@ -471,7 +473,7 @@
 
             _prepareCalculatorConfig: function () {
                 var config = {};
-                var types = this.config.getItemTypes().toString().split(',');
+                var types = this.config.getItemTypes();
                 if (types.length) {
                     types.forEach(function (entry) {
                         config[entry] = {'total': this.config.getNumOfChunks(entry)}
