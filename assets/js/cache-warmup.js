@@ -399,6 +399,7 @@
                                     // special: error on success (http status 200)
                                     // media manager returns 200 even if an image cannot be generated (too big, RAM exceeded)
                                     // we assume an error if response starts with rex-page-header
+                                    // otherwise page will return blank if stuff works out as expected
                                     if (data.substr(0, 30) === '<header class="rex-page-header') {
                                         debug.error('cache: request error for ' + url.slug);
                                         that.cacheWarmup.isError('RAM exceeded', 'internal', url.absolute);
