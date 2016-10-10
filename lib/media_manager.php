@@ -31,7 +31,11 @@ class cache_warmup_media_manager extends rex_media_manager
         $CacheFilename = $this->getCacheFilename();
 
         if (!$this->isCached()) {
+            // clean buffer to avoid warnings caused by headers already sent
+            // https://github.com/FriendsOfREDAXO/cache_warmup/issues/24
+            ob_start();
             $this->media->sendMedia($CacheFilename, $headerCacheFilename, true);
+            ob_end_clean();
         }
     }
 }
