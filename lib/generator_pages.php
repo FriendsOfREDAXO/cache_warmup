@@ -9,10 +9,10 @@ class cache_warmup_generator_pages extends cache_warmup_generator
     /**
      * Generate cache for given items
      *
-     * @param Iterator $items
+     * @param array $items
      * @return array
      */
-    public function generateCache(Iterator $items)
+    public function generateCache(array $items)
     {
         if (rex_addon::get('structure')->isAvailable()) {
             foreach ($items as $item) {
