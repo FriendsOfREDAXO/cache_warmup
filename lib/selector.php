@@ -28,7 +28,7 @@ abstract class cache_warmup_selector
      * @return array
      * @throws rex_sql_exception
      */
-    public static function getImages()
+    private static function getImages()
     {
         if (rex_addon::get('media_manager')->isAvailable() && rex_addon::get('structure')->isAvailable()) {
 
