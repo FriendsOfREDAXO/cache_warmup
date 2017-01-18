@@ -24,11 +24,7 @@ abstract class cache_warmup_generator
             }
         }
 
-        if (count($filteredItemsArray) > 0) {
-            return $filteredItemsArray;
-        }
-
-        return array();
+        return $filteredItemsArray;
     }
 
     /**
