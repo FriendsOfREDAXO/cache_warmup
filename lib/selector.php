@@ -28,7 +28,7 @@ abstract class cache_warmup_selector
      * @return array
      * @throws rex_sql_exception
      */
-    public static function getImages()
+    private static function getImages()
     {
         if (rex_addon::get('media_manager')->isAvailable() && rex_addon::get('structure')->isAvailable()) {
 
@@ -143,7 +143,7 @@ abstract class cache_warmup_selector
      * @param array $items
      * @return array
      */
-    public static function filterImages(array $items)
+    private static function filterImages(array $items)
     {
         $filteredImages = array();
 
@@ -165,7 +165,7 @@ abstract class cache_warmup_selector
      *
      * @return array
      */
-    public static function getChunkedImagesArray()
+    private static function getChunkedImagesArray()
     {
         $images = self::getImages();
         $mediaTypes = self::getMediaTypes();
@@ -189,7 +189,7 @@ abstract class cache_warmup_selector
      * @return array
      * @throws rex_sql_exception
      */
-    public static function getMediaTypes()
+    private static function getMediaTypes()
     {
         if (rex_addon::get('media_manager')->isAvailable()) {
             $mediaTypes = array();
@@ -212,7 +212,7 @@ abstract class cache_warmup_selector
      * @return array
      * @throws rex_sql_exception
      */
-    public static function getPages()
+    private static function getPages()
     {
         if (rex_addon::get('structure')->isAvailable()) {
             $pages = array();
@@ -234,7 +234,7 @@ abstract class cache_warmup_selector
      *
      * @return array
      */
-    public static function getChunkedPagesArray()
+    private static function getChunkedPagesArray()
     {
         $pages = self::getPages();
         $languages = self::getLanguages();
@@ -257,7 +257,7 @@ abstract class cache_warmup_selector
      *
      * @return int[]
      */
-    public static function getLanguages()
+    private static function getLanguages()
     {
         return rex_clang::getAllIds(true);
     }
@@ -270,7 +270,7 @@ abstract class cache_warmup_selector
      * @param int $chunkSize
      * @return array
      */
-    public static function chunk(array $items, $chunkSize = 3)
+    private static function chunk(array $items, $chunkSize = 3)
     {
         return array_chunk($items, $chunkSize);
     }
