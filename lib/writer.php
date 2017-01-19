@@ -22,7 +22,7 @@ abstract class cache_warmup_writer
      *
      * @param string $output
      */
-    public static function replaceOutputWith($output = '')
+    public static function replaceOutputWith($output)
     {
         rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) use ($output) {
             $ep->setSubject($output);
