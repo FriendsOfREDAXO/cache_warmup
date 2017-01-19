@@ -108,18 +108,24 @@ abstract class cache_warmup_selector
                         rex::getTablePrefix() . 'clang',
                         rex::getTablePrefix() . 'media'
                     );
-                    $sql->setQuery('SELECT ' . implode(',', $metainfos['names']) . ' FROM ' . implode(',', $tablesFrom));
-                    foreach ($sql as $row) {
-                        foreach ($metainfos['names'] as $field) {
-                            $files = $row->getValue($field);
-                            if (strpos($files, ',') > 0) {
-                                // is medialist
-                                foreach (explode(',', $files) as $file) {
-                                    $images[] = $file;
+                    foreach ($tablesFrom as $table) {
+                        $sql->setQuery('SELECT * FROM ' . $table);
+                        if ($sql->getRows() > 0) {
+                            foreach ($sql as $row) {
+                                foreach ($metainfos['names'] as $field) {
+                                    if ($row->hasValue($field)) {
+                                        $files = $row->getValue($field);
+                                        if (strpos($files, ',') > 0) {
+                                            // is medialist
+                                            foreach (explode(',', $files) as $file) {
+                                                $images[] = $file;
+                                            }
+                                        } else {
+                                            // is media
+                                            $images[] = $files;
+                                        }
+                                    }
                                 }
-                            } else {
-                                // is media
-                                $images[] = $files;
                             }
                         }
                     }
