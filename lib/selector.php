@@ -15,8 +15,8 @@ abstract class cache_warmup_selector
     public static function prepareCacheItems()
     {
         return array(
-            'images' => cache_warmup_selector::getChunkedImagesArray(),
-            'pages' => cache_warmup_selector::getChunkedPagesArray()
+            'images' => self::getChunkedImagesArray(),
+            'pages' => self::getChunkedPagesArray()
         );
     }
 
