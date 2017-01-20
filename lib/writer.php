@@ -18,19 +18,6 @@ abstract class cache_warmup_writer
 
 
     /**
-     * Replace page output with given content
-     *
-     * @param string $output
-     */
-    public static function replaceOutputWith($output = '')
-    {
-        rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) use ($output) {
-            $ep->setSubject($output);
-        });
-    }
-
-
-    /**
      * Build JSON object from array
      *
      * @param array $items
