@@ -25,3 +25,4 @@ pages:
 
 requires:
     redaxo: '^5.0'
+    php: '>=5.5'
