@@ -226,7 +226,7 @@ abstract class cache_warmup_selector
         if (rex_addon::get('structure')->isAvailable()) {
 
             $sql = rex_sql::factory();
-            $pages = $sql->getArray('SELECT a.id, a.clang_id FROM ' . rex::getTable('article') . ' AS a LEFT JOIN ' . rex::getTable('clang') . ' AS c ON a.clang_id = c.id WHERE a.status = ? AND c.status = ?', [1, 1], PDO::FETCH_NUM);
+            $pages = $sql->getArray('SELECT a.id, a.clang_id FROM ' . rex::getTable('article') . ' AS a INNER JOIN ' . rex::getTable('clang') . ' AS c ON a.clang_id = c.id WHERE a.status = ? AND c.status = ?', [1, 1], PDO::FETCH_NUM);
 
             return $pages;
         }
