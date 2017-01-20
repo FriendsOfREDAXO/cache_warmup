@@ -151,8 +151,11 @@ abstract class cache_warmup_selector
 
         foreach ($items as $item) {
             $media = rex_media::get($item);
-            if ($media && $media->isImage()) {
-                $filteredImages[] = $media->getId();
+            if ($media) {
+                if ($media->isImage()) {
+                    $filteredImages[] = $media->getId();
+                }
+                rex_media::clearInstance($item);
             }
         }
 
