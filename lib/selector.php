@@ -224,14 +224,10 @@ abstract class cache_warmup_selector
     private static function getPages()
     {
         if (rex_addon::get('structure')->isAvailable()) {
-            $pages = array();
 
             $sql = rex_sql::factory();
-            $sql->setQuery('SELECT id FROM ' . rex::getTablePrefix() . 'article WHERE status = 1');
+            $pages = $sql->getArray('SELECT id,clang_id FROM ' . rex::getTablePrefix() . 'article WHERE status = 1', array(), PDO::FETCH_NUM);
 
-            foreach ($sql as $row) {
-                $pages[] = $row->getArrayValue('id');
-            }
             return $pages;
         }
         return array();
@@ -245,30 +241,10 @@ abstract class cache_warmup_selector
      */
     private static function getChunkedPagesArray()
     {
-        $pages = self::getPages();
-        $languages = self::getLanguages();
+        $items = self::getPages();
 
-        $items = array();
-        if (count($pages) > 0 && count($languages) > 0) {
-            foreach ($pages as $page) {
-                foreach ($languages as $language) {
-                    $items[] = array($page, $language);
-                }
-            }
-        }
         $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
         return array('count' => count($items), 'items' => $chunkedItems);
-    }
-
-
-    /**
-     * Get all languages
-     *
-     * @return int[]
-     */
-    private static function getLanguages()
-    {
-        return rex_clang::getAllIds(true);
     }
 
 
