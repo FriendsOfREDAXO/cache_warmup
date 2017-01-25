@@ -230,7 +230,7 @@ abstract class cache_warmup_selector
             
             // if clang has status on/off (REX >=5.1), adjust query to select online pages only
             if (method_exists('rex_clang', 'isOnline')) {
-                $query = 'SELECT a.id, a.clang_id FROM ' . rex::getTable('article') . ' AS a INNER JOIN ' . rex::getTable('clang') . ' AS c ON a.clang_id = c.id WHERE a.status = ? AND c.status = ?';
+                $query .= ' AND c.status = ?';
                 $params = [1, 1];                
             }
 
