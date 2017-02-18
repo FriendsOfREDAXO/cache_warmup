@@ -26,3 +26,10 @@ pages:
 requires:
     redaxo: '^5.0'
     php: '>=5.5'
+
+conflicts:
+    packages:
+        media_manager: '>=3'
+        metainfo: '>=3'
+        structure: '>=3'
+        yform: '>=3'
