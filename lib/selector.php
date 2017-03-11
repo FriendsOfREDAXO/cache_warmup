@@ -264,7 +264,7 @@ abstract class cache_warmup_selector
      * @param int $chunkSize
      * @return array
      */
-    private static function chunk(array $items, $chunkSize = 3)
+    private static function chunk(array $items, $chunkSize)
     {
         return array_chunk($items, $chunkSize);
     }
