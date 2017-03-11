@@ -4,3 +4,8 @@
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
 }
+
+/* hide be_style customizer title here as our popup is too small! */
+#rex-page-cache-warmup-warmup .be-style-customizer-title {
+    display: none;
+}
