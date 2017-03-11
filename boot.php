@@ -1,14 +1,39 @@
 <?php
 
-// number of images to generate per single request
-// increase to speed up (reduces number of requests but extends script time)
-// (hint: enable debug mode in cache-warmup.js to report execution times)
-$this->setConfig('chunkSizeImages', 4);
+// chunk size config
+// min: min number of items to generate per request
+// max: max number of items to generate per request
+// ratio: multiplies with execution time to define number of items to generate per request
+$chunksConfig = array(
+    'chunkSizeImages' => array('min' => 10,  'max' => 50,   'ratio' => 0.4),
+    'chunkSizePages'  => array('min' => 100, 'max' => 1000, 'ratio' => 6)
+);
 
-// number of pages to generate per single request
-// increase to speed up (reduces number of requests but extends script time)
+// get `max_execution_time`
+// if it’s false, set to a low value 
+$executionTime = ini_get('max_execution_time');
+if ($executionTime === false) {
+    $executionTime = 30;
+}
+
+// define number of items to generate per single request based on `max_execution_time`
+// higher values reduce number of requests but extend script time
 // (hint: enable debug mode in cache-warmup.js to report execution times)
-$this->setConfig('chunkSizePages', 42); // magic redaxo number
+foreach ($chunksConfig as $k => $v) {
+    $numOfItems = round($executionTime * $v['ratio']);
+
+    if ($numOfItems > $v['max'] || $executionTime === 0) {
+        // limit to max value
+        // hint: executionTime === 0 equates to infinite! 
+        $this->setConfig($k, $v['max']);
+    } elseif ($numOfItems < $v['min']) {
+        // limit to min value
+        $this->setConfig($k, $v['min']);
+    } else {
+        // set to calculated number of items
+        $this->setConfig($k, $numOfItems);
+    }
+}
 
 // inject addon ressources
 if (rex::isBackend() && rex::getUser()) {
