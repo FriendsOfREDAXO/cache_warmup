@@ -403,6 +403,7 @@
                                     if (data.substr(0, 30) === '<header class="rex-page-header') {
                                         debug.error('cache: request error for ' + url.slug);
                                         that.cacheWarmup.isError('RAM exceeded', 'internal', url.absolute);
+                                        throw new Error('RAM exceeded');
                                     }
                                     else {
                                         // get debug infos
@@ -414,6 +415,7 @@
                                 .fail(function (jqXHR, textStatus, errorThrown) {
                                     // throw up error message, statuscode and URL to page where error occured
                                     that.cacheWarmup.isError(errorThrown, jqXHR.status, url.absolute);
+                                    throw new Error(errorThrown);
                                 });
                         });
                     }, Promise.resolve()).then(function () {
