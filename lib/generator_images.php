@@ -19,6 +19,9 @@ class cache_warmup_generator_images extends cache_warmup_generator
 
             // filter image ids
             $imageIds = array_column($items, 0);
+            $imageIds = array_filter($imageIds, function($v) {
+                return preg_match('/^\d+$/', $v) && intval($v) > 0; // sanitize
+            });
             $imageIds = array_unique($imageIds);
 
             // find image names by id
