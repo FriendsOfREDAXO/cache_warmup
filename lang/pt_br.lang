@@ -1,0 +1,25 @@
+cache_warmup_title           = Cache Warmup
+cache_warmup_description     = Gera arquivos de cache com antecedência para todas as páginas e imagens usadas para melhorar o desempenho inicial do site.
+
+cache_warmup_button_start    = Gera chachês
+cache_warmup_button_success  = Legal, obrigada!
+cache_warmup_button_cancel   = Cancelar
+cache_warmup_button_again    = Tende de novo
+
+cache_warmup_pages_title     = Gerando páginas..
+cache_warmup_pages_progress  = Página <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+
+cache_warmup_images_title    = Gerando imagens...
+cache_warmup_images_progress = Imagem <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+
+cache_warmup_time_elapsed    = Tempo decorrido
+
+cache_warmup_finished_title  = Concluído: cachê preparado.
+cache_warmup_finished_text   = <p>O cachê foi preparado para <strong><span class="cache-warmup__target__finished-pages-num">pages</span> <span class="cache-warmup__target__finished-join">e</span> <span class="cache-warmup__target__finished-images-num">imagens</span></strong>. Demorou um tempo <strong class="cache-warmup__target__finished-time-num"></strong> <p>The cache has been prepared for <strong><span class="cache-warmup__target__finished-pages-num">pages</span> <span class="cache-warmup__target__finished-join">and</span> <span class="cache-warmup__target__finished-images-num">images</span></strong>. It took some <strong class="cache-warmup__target__finished-time-num"></strong> E irá salvar os usuários de esperar muito tempo ao chamar o site pela primeira vez. </ P>
+
+cache_warmup_error_title     = Merda, algo deu errado!
+cache_warmup_error_text      = <p> Um erro ocorreu ao gerar o cachê. Mais detalhes na página. Nós apreciamos qualquer ajuda para melhorar a qualidade do addon, se você reportar os erros aqui: <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues">Github</a>. Obrigado!</p>
+cache_warmup_error_link      = Lindo para a página de erros
+
+cache_warmup_nothing_title   = Sem conteúdo?
+cache_warmup_nothing_text    = <p> Desculpe-nos, mas não há nada no cachê. O REDAXO ou os addons requeridos estão vazios (<code>media_manager</code> para imagens <code>structure</code> e conteúdo) não estão disponíveis.</p>
