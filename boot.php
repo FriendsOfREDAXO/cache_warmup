@@ -37,7 +37,7 @@ foreach ($chunksConfig as $k => $v) {
 
 // switch REDAXO to frontend mode before generating cache files
 rex_extension::register('PACKAGES_INCLUDED', function(rex_extension_point $ep) {
-    if (rex_be_controller::getCurrentPagePart(2) == 'generator') {
+    if (rex_be_controller::getCurrentPage() == 'cache_warmup/generator') {
         rex::setProperty('redaxo', false);
     }
 }, rex_extension::EARLY);
