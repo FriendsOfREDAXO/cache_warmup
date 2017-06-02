@@ -36,6 +36,7 @@ foreach ($chunksConfig as $k => $v) {
 }
 
 // switch REDAXO to frontend mode before generating cache files
+// this is essential to include content modification by addons, e.g. slice status on/off
 rex_extension::register('PACKAGES_INCLUDED', function(rex_extension_point $ep) {
     if (rex_be_controller::getCurrentPage() == 'cache_warmup/generator') {
         rex::setProperty('redaxo', false);
