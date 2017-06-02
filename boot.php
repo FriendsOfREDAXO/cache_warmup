@@ -35,6 +35,13 @@ foreach ($chunksConfig as $k => $v) {
     }
 }
 
+// switch REDAXO to frontend mode before generating cache files
+rex_extension::register('PACKAGES_INCLUDED', function(rex_extension_point $ep) {
+    if (rex_be_controller::getCurrentPagePart(2) == 'generator') {
+        rex::setProperty('redaxo', false);
+    }
+}, rex_extension::EARLY);
+
 // inject addon ressources
 if (rex::isBackend() && rex::getUser()) {
 
