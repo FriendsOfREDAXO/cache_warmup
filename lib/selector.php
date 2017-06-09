@@ -134,6 +134,8 @@ abstract class cache_warmup_selector
 
             /* prepare and return ------------------------------------------------- */
 
+            $images = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES_SELECTED', $images));
+            
             // filter images
             $images = self::filterImages($images);
 
