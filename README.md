@@ -41,8 +41,8 @@ Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die ges
 ### Ich bin Entwickler*in. Was genau macht das Addon?
 
 1. Es werden alle [Bilder](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L31) erfasst, die in __Modulen, Metainfos und yforms__ verwendet werden, sowie alle definierten [MediaTypes](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L201) des Media Managers. Über den Extension Point `CACHE_WARMUP_IMAGES` können zusätzliche Bilder hinzugefügt werden:
-```
-rex_extension::register('CACHE_WARMUP_IMAGES_SELECTED', function ($ep)
+```php
+rex_extension::register('CACHE_WARMUP_IMAGES', function ($ep)
 {
     $images = $ep->getSubject();
     $db = rex_sql::factory()->setQuery('SELECT filename FROM rex_media');
