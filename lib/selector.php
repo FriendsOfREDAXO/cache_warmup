@@ -134,6 +134,7 @@ abstract class cache_warmup_selector
 
             /* prepare and return ------------------------------------------------- */
 
+            // create extension point (EP) for developers to extend selected images
             $images = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES', $images));
             
             // filter images
