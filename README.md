@@ -40,7 +40,19 @@ Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die ges
 
 ### Ich bin Entwickler*in. Was genau macht das Addon?
 
-1. Es werden alle [Bilder](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L31) erfasst, die in __Modulen, Metainfos und yforms__ verwendet werden, sowie alle definierten [MediaTypes](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L201) des Media Managers.
+1. Es werden alle [Bilder](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L31) erfasst, die in __Modulen, Metainfos und yforms__ verwendet werden, sowie alle definierten [MediaTypes](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L201) des Media Managers. Über den Extension Point `CACHE_WARMUP_IMAGES` können zusätzliche Bilder hinzugefügt werden:
+```
+rex_extension::register('CACHE_WARMUP_IMAGES_SELECTED', function ($ep)
+{
+    $images = $ep->getSubject();
+    $db = rex_sql::factory()->setQuery('SELECT filename FROM rex_media');
+    while ($db->hasNext()) {
+        $images[] = $db->getValue('filename');
+        $db->next();
+    }
+    return $images;
+});
+```
 2. Es werden alle [Seiten](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L224) erfasst, die online sind, sowie alle Sprachen.
 3. Aus den erfassten Daten wird [ein großes Array erstellt](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L15) mit Einträgen für jedes Bild mit jedem MediaType und jeder Seite in jeder Sprache. Beispiel: 10 Bilder mit 5 MediaTypes = 50 Bilder. 100 Seiten in 3 Sprachen = 300 Seiten.
 4. Das große Array wird danach in viele Häppchen zerhackt, deren Größe von der [Skriptlaufzeit des Servers](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/boot.php#L19-L21) abhängt. Damit kann später gesteuert werden, wie viele Cachefiles bei jedem Request erstellt werden. Bilder benötigen dabei natürlich massiv mehr Serverressourcen als Seiten.
