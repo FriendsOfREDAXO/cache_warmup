@@ -20,7 +20,7 @@ class cache_warmup_generator_pages extends cache_warmup_generator
 
                 // generate content
                 $article = new rex_article_content($article_id, $clang);
-                $article->getArticle();
+                $article->getArticleTemplate();
 
                 // generate meta
                 rex_article_cache::generateMeta($article_id, $clang);
