@@ -4,9 +4,7 @@ Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performan
 
 ![Screenshot](https://raw.githubusercontent.com/FriendsOfREDAXO/cache-warmup/assets/cache-warmup.jpg)
 
-## Fragen?
-
-### Wofür wird das Addon benötigt?
+## Wofür wird das Addon benötigt?
 
 Manchmal hinterlegt man eine Website zur Ansicht auf einem Testserver. Häufig wird davor oder danach der REDAXO-Cache gelöscht, um veraltete Inhalte zu entfernen, die vielleicht noch aus der Entwicklungszeit enthalten sind. Danach allerdings müssen alle Inhalte neu generiert werden. REDAXO übernimmt dies eigenständig beim Aufruf jeder Seite.
 
@@ -14,7 +12,7 @@ Diese initialen Seitenaufrufe können leider recht langsam sein, vor allem, wenn
 
 Das Cache-Warmup-Addon kann alle verwendeten Inhalte der Website vorab generieren, so dass danach niemand mehr unnötig lange warten muss.
 
-### Fehler `RAM exceeded (internal)`, was hat das zu bedeuten?
+## Fehler `RAM exceeded (internal)`, was hat das zu bedeuten?
 
 Der Arbeitsspeicher des Webservers reicht nicht aus, um alle Bilder zu verarbeiten. Das wird übrigens auch die Website selbst betreffen, nicht nur das Cache-Warmup-Addon. Deshalb sollte nun unbedingt der Medienpool geprüft und alle übergroßen (betrifft Pixel, nicht Dateigröße) Bilder manuell verkleinert werden — oder alternativ der Arbeitsspeicher des Webservers vergrößert werden.
 
@@ -23,7 +21,7 @@ Noch ein Hinweis zu Bildgrößen: Die Pixelwerte sind entscheidend dafür, wievi
 
 🐿 __Protip:__ Das Cache-Warmup-Addon ist also auch nützlich, um zu prüfen, ob die Ressourcen des Webservers für die Auslieferung aller Bilder der Website ausreichen.
 
-### Ein anderer Fehler als oben. Was hat der nun zu bedeuten?
+## Ein anderer Fehler als oben. Was hat der nun zu bedeuten?
 
 Es gibt viele weitere Fehler, die bei der Verwendung des Cache-Warmup-Addons auftreten können. Ein paar typische sind diese:
 
@@ -38,7 +36,7 @@ Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die ges
 
 💯 Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei [Github](https://github.com/FriendsOfREDAXO/cache_warmup/issues) gemeldet werden. Vielen Dank!
 
-### Ich bin Entwickler*in. Was genau macht das Addon?
+## Ich bin Entwickler*in. Was genau macht das Addon?
 
 1. Es werden alle [Bilder](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L31) erfasst, die in __Modulen, Metainfos und yforms__ verwendet werden, sowie alle definierten [MediaTypes](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/selector.php#L201) des Media Managers. Über den Extension Point `CACHE_WARMUP_IMAGES` können zusätzliche Bilder hinzugefügt werden:
 ```php
