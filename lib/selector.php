@@ -53,13 +53,13 @@ abstract class cache_warmup_selector
                 }
             }
 
-            /* find images in yforms (be_media, be_medialist) */
+            /* find images in yforms (be_media, be_medialist, mediafile) */
 
             if (rex_addon::get('yform')->isAvailable()) {
                 $yforms = array();
 
                 // get tables and fields where 'be_media' and 'be_medialist' are used
-                $sql->setQuery('SELECT table_name,name FROM ' . rex::getTablePrefix() . 'yform_field WHERE type_name LIKE "be_media%"');
+                $sql->setQuery('SELECT table_name,name FROM ' . rex::getTablePrefix() . 'yform_field WHERE type_name LIKE "be_media%" OR type_name LIKE "mediafile"');
                 foreach ($sql as $row) {
                     $yforms[$row->getValue('table_name')][] = $row->getValue('name');
                 }
