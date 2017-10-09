@@ -1,0 +1,25 @@
+cache_warmup_title           = Cache Warmup
+cache_warmup_description     = Genererar cachefiler för alla sidor och använda bilder i förväg för att förbättra prestandan vid första besöket på webbsidan.
+
+cache_warmup_button_start    = Skapa cachen
+cache_warmup_button_success  = Cool, tack!
+cache_warmup_button_cancel   = Avbryta
+cache_warmup_button_again    = Försök igen
+
+cache_warmup_pages_title     = Skapa sidor ...
+cache_warmup_pages_progress  = Sida <span class="cache-warmup__target__progress-from">1</span> från <span class="cache-warmup__target__progress-to">…</span>
+
+cache_warmup_images_title    = Skapa bilder ...
+cache_warmup_images_progress = Bild <span class="cache-warmup__target__progress-from">1</span> från <span class="cache-warmup__target__progress-to">…</span>
+
+cache_warmup_time_elapsed    = Tiden som gått
+
+cache_warmup_finished_title  = Färdig: Cachen skapades
+cache_warmup_finished_text   = <p>Cacheminnet har förberedds för <strong> <span class = "cache-warmup__target__finished-pages-num"> sidor </ span> <span class = "cache-warmup__target__finished-join"> och </ span> <span class = "cache-warmup__target__finished-images-num"> bilder </ span> </ strong>. Det tog lite <strong class = "cache-warmup__target__finished-time-num"> </ strong> och kommer att spara tid för användare från att vänta för länge när de öppnar webbplatsen för första gången. </p>
+
+cache_warmup_error_title     = Något har gått fel!
+cache_warmup_error_text      = <p> Ett fel uppstod när cacheminnet genererades. Se detaljer på felsidan. Vi uppskattar allt stöd för att förbättra kvalitén av tillägget om du rapporterar problem på <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues"> Github </a>. Tack! </p>
+cache_warmup_error_link      = Länk till felsidan
+
+cache_warmup_nothing_title   = Inget innehåll?
+cache_warmup_nothing_text    = <p>Jag är ledsen men det finns inget att cachar. Inga bilder eller text. Antingen REDAXO är tom eller de nödvändiga tilläggen (<code> media_manager</code> för bilder och <code> struktur </code> för innehåll) är inte tillgängliga.</p>
