@@ -50,10 +50,10 @@ rex_extension::register('PACKAGES_INCLUDED', function (rex_extension_point $ep) 
 if (rex::isBackend() && rex::getUser()) {
 
     if (rex_be_controller::getCurrentPagePart(2) == 'warmup') {
-        rex_view::addJsFile($this->getAssetsUrl('js/handlebars.min.js?v=' . $this->getVersion()));
-        rex_view::addJsFile($this->getAssetsUrl('js/timer.jquery.min.js?v=' . $this->getVersion()));
+        rex_view::addJsFile($this->getAssetsUrl('js/handlebars.min.js'));
+        rex_view::addJsFile($this->getAssetsUrl('js/timer.jquery.min.js'));
     }
 
-    rex_view::addCssFile($this->getAssetsUrl('css/cache-warmup.css?v=' . $this->getVersion()));
-    rex_view::addJsFile($this->getAssetsUrl('js/cache-warmup.js?v=' . $this->getVersion()));
+    rex_view::addCssFile($this->getAssetsUrl('css/cache-warmup.css'));
+    rex_view::addJsFile($this->getAssetsUrl('js/cache-warmup.js'));
 }
