@@ -38,9 +38,9 @@ class cache_warmup_generator_images extends cache_warmup_generator
 
             // generate image cache
             foreach ($imageFilenames as $image) {
-                foreach ($mediaTypes as $type) {
-                    $media = rex_media::get($image);
-                    if ($media instanceof rex_media && $media->isImage()) {
+                $media = rex_media::get($image);
+                if ($media instanceof rex_media && $media->isImage()) {
+                    foreach ($mediaTypes as $type) {
                         if (method_exists('rex_media_manager', 'create')) {
                             rex_media_manager::create($type, $image);
                         } else {
