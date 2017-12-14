@@ -47,7 +47,7 @@ rex_extension::register('PACKAGES_INCLUDED', function (rex_extension_point $ep) 
 }, rex_extension::EARLY);
 
 // inject addon ressources
-if (rex::isBackend() && rex::getUser()) {
+if (rex::isBackend() && rex::getUser() && rex_be_controller::getCurrentPagePart(1) == 'cache_warmup') {
 
     if (rex_be_controller::getCurrentPagePart(2) == 'warmup') {
         rex_view::addJsFile($this->getAssetsUrl('js/handlebars.min.js'));
