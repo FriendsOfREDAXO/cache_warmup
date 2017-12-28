@@ -46,7 +46,7 @@ rex_extension::register('PACKAGES_INCLUDED', function (rex_extension_point $ep) 
     }
 }, rex_extension::EARLY);
 
-// inject addon ressources, for both cache_warmup/generator and system/cache_warmup
+// inject addon ressources, for both cache_warmup/warmup and system/cache_warmup
 if (rex::isBackend() && rex::getUser() && strpos(rex_be_controller::getCurrentPage(), 'cache_warmup') !== false) {
 
     if (rex_be_controller::getCurrentPagePart(2) == 'warmup') {
