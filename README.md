@@ -56,3 +56,135 @@ rex_extension::register('CACHE_WARMUP_IMAGES', function ($ep)
 4. Das große Array wird danach in viele Häppchen zerhackt, deren Größe von der [Skriptlaufzeit des Servers](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/boot.php#L19-L21) abhängt. Damit kann später gesteuert werden, wie viele Cachefiles bei jedem Request erstellt werden. Bilder benötigen dabei natürlich massiv mehr Serverressourcen als Seiten.
 5. Das Array wird [als JSON im HTML des Popups](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/pages/warmup.php#L22) ausgegeben, das das Generieren des Caches triggert, den Fortschritt zeigt und Infos ausgibt. Das Popup [parst das JSON](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/assets/js/cache-warmup.js#L454) und sendet [häppchenweise Ajax requests](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/assets/js/cache-warmup.js#L380) an einen [Generator](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/pages/generator.php).
 6. Der Generator erstellt die Cachefiles für [Bilder](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/generator_images.php) und [Seiten](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/lib/generator_pages.php). Die Angaben dazu, welche Bilder mit welchen Mediatypen und welche Seiten in welchen Sprachen erstellt werden sollen, befinden sich im [Query string](https://github.com/FriendsOfREDAXO/cache_warmup/blob/master/pages/generator.php#L6) der URL.
+
+## Extension Points (EP)
+
+| Extension Point               | Beschreibung |
+| ----------------------------- | ------------ |
+| `CACHE_WARMUP_PAGES`          | … |
+| `CACHE_WARMUP_IMAGES`         | … |
+| `CACHE_WARMUP_MEDIATYPES`     | … |
+| `CACHE_WARMUP_GENERATE_PAGE`  | … |
+| `CACHE_WARMUP_GENERATE_IMAGE` | … |
+
+### Anwendungsbeispiele
+
+#### `CACHE_WARMUP_PAGES`
+
+```php
+rex_extension::register('CACHE_WARMUP_PAGES', function (rex_extension_point $ep) {
+    $pages = $ep->getSubject();
+
+    // Seite hinzufügen (article_id, clang)
+    $pages[] = array("12", "1");
+    $pages[] = array("12", "2");
+
+    return $pages;
+});
+```
+
+#### `CACHE_WARMUP_IMAGES `
+
+```php
+rex_extension::register('CACHE_WARMUP_IMAGES', function (rex_extension_point $ep) {
+    $images = $ep->getSubject();
+
+    // Bilder hinzufügen
+    $images[] = 'dave-grohl.jpg';
+    $images[] = 'pat-smear.jpg';
+    $images[] = 'nate-mendel.jpg';
+    $images[] = 'taylor-hawkins.jpg';
+    $images[] = 'chris-shiflett.jpg';
+
+    return $images;
+});
+```
+
+#### `CACHE_WARMUP_MEDIATYPES `
+
+```php
+rex_extension::register('CACHE_WARMUP_MEDIATYPES', function (rex_extension_point $ep) {
+    $mediaTypes = $ep->getSubject();
+    foreach ($mediaTypes as $k => $mediaType) {
+
+        // MediaType 'content' entfernen
+        if ($mediaType === 'content') {
+            unset($mediaTypes[$k]);
+        }
+
+        // REDAXO-MediaTypes entfernen
+        if (strpos($mediaType, 'rex_') !== false) {
+            unset($mediaTypes[$k]);
+        }
+    }
+    return $mediaTypes;
+});
+```
+
+#### `CACHE_WARMUP_GENERATE_IMAGE `
+
+```php
+rex_extension::register('CACHE_WARMUP_GENERATE_IMAGE', function (rex_extension_point $ep) {
+    list($imageId, $mediaType) = $ep->getParams();
+
+    $sql = rex_sql::factory();
+    $sql->setQuery('SELECT filename FROM ' . rex::getTablePrefix() . 'media WHERE id=?', [$imageId]);
+    $image = $sql->getValue('filename');
+
+    $media = rex_media::get($image);
+    if ($media instanceof rex_media && $media->isImage()) {
+
+        // MediaType 'photos' ausschließlich für Bilder der Kategorie 3 verwenden
+        if ($mediaType == 'photos' && $media->getCategoryId() != 3) {
+            return false;
+        }
+
+        // MediaType 'fullscreen' auslassen
+        if ($mediaType == 'fullscreen') {
+            return false;
+        }
+
+        // Bilder der Kategorie 2 auslassen
+        if ($media->getCategoryId() == 2) {
+            return false;
+        }
+
+        // Interne REDAXO-MediaTypes (beginnen mit 'rex_') auslassen
+        if (strpos($mediaType, 'rex_') !== false) {
+            return false;
+        }
+    }
+    rex_media::clearInstance($item);
+    return true;
+});
+```
+
+#### `CACHE_WARMUP_GENERATE_PAGE `
+
+```php
+rex_extension::register('CACHE_WARMUP_GENERATE_PAGE', function (rex_extension_point $ep) {
+    list($article_id, $clang) = $ep->getParams();
+
+    $article = rex_article::get($article_id);
+
+    // Artikel mit ID 42 auslassen
+    if ($article_id == 42) {
+        return false;
+    }
+
+    // Artikel der Kategorie 23 und darunter auslassen
+    if (in_array(23, $article->getPathAsArray())) {
+        return false;
+    }
+
+    // Sprache mit clang 2 komplett auslassen
+    if ($clang == 2) {
+        return false;
+    }
+
+    return true;
+});
+```
+
+
+
