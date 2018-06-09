@@ -42,59 +42,20 @@ Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die ges
 
 Das AddOn stellt verschiedene Extension Points bereit, um in die Auswahl der Artikel und Bilder, deren Cachefiles generiert werden sollen, manuell einzugreifen. Dies kann nützlich sein, um etwa Bilder zu ergänzen, die aus verschiedenen Gründen nicht vom AddOn erfasst worden sind, oder um bestimmte Kategorien oder Medientypen vom Generieren des Caches auszuschließen.
 
-| Extension Point               | Beschreibung |
-| ----------------------------- | ------------ |
-| `CACHE_WARMUP_GENERATE_PAGE`  | Enthält den zu generierenden Artikel und die Sprache. Kann verwendet werden, um Artikel anhand verschiedener Kriterien auszulassen, wenn der Cache generiert wird. |
-| `CACHE_WARMUP_GENERATE_IMAGE` | Enthält das zu generierende Bild und den Medientyp. Kann verwendet werden, um Bilder anhand verschiedener Kriterien auszulassen, wenn der Cache generiert wird. |
-| `CACHE_WARMUP_PAGES`          | Ermöglicht, die Liste der vom AddOn ausgewählten Artikel zu bearbeiten. |
-| `CACHE_WARMUP_IMAGES`         | Ermöglicht, die Liste der vom AddOn ausgewählten Bilder zu bearbeiten. |
-| `CACHE_WARMUP_MEDIATYPES`     | Ermöglicht, die Liste der vom AddOn ausgewählten Medientypen zu bearbeiten. |
+| Extension Point                         | Beschreibung |
+| --------------------------------------- | ------------ |
+| `CACHE_WARMUP_GENERATE_PAGE`            | Enthält den zu generierenden Artikel und die Sprache. Kann verwendet werden, um Artikel anhand verschiedener Kriterien auszulassen, wenn der Cache generiert wird. |
+| `CACHE_WARMUP_GENERATE_IMAGE`           | Enthält das zu generierende Bild und den Medientyp. Kann verwendet werden, um Bilder anhand verschiedener Kriterien auszulassen, wenn der Cache generiert wird. |
+| `CACHE_WARMUP_IMAGES`                   | Ermöglicht, die Liste der vom AddOn ausgewählten Bilder zu bearbeiten. |
+| `CACHE_WARMUP_MEDIATYPES`               | Ermöglicht, die Liste der vom AddOn ausgewählten Medientypen zu bearbeiten. |
+| `CACHE_WARMUP_PAGES_WITH_CLANGS`        | Liefert alle zu generierenden Artikel in ihren Sprachen. Kann verwendet werden, um die Artikelliste zu bearbeiten, vor allem, um weitere Artikel mit Angabe der Sprache zu ergänzen. |
+| `CACHE_WARMUP_IMAGES_WITH_MEDIATYPES` | Liefert alle zu generierenden Bilder mit ihren Medientypen. Kann verwendet werden, um die Bilderliste zu bearbeiten, vor allem, um weitere Bilder mit Angabe des Medientyps zu ergänzen. |
 
 ### Anwendungsbeispiele für die Nutzung von EPs
 
 Die Beispiele zeigen verschiedene Anwendungsfälle und können beispielsweise __in der `boot.php` des project-AddOns__ hinterlegt werden. 
 
-#### `CACHE_WARMUP_GENERATE_IMAGE `
-
-Dieser EP wird unmittelbar vorm Generieren der Cachefiles jedes einzelnen Bilders angesprochen und ermöglicht, anhand verschiedener Kriterien das Bild zu überspringen. Das Codebeispiel zeigt verschiedene Anwendungsfälle:
-
-```php
-rex_extension::register('CACHE_WARMUP_GENERATE_IMAGE', function (rex_extension_point $ep) {
-    list($imageId, $mediaType) = $ep->getParams();
-
-    $sql = rex_sql::factory();
-    $sql->setQuery('SELECT filename FROM ' . rex::getTablePrefix() . 'media WHERE id=?', [$imageId]);
-    $image = $sql->getValue('filename');
-
-    $media = rex_media::get($image);
-    if ($media instanceof rex_media && $media->isImage()) {
-
-        // MediaType 'photos' ausschließlich für Bilder der Kategorie 3 verwenden
-        if ($mediaType == 'photos' && $media->getCategoryId() != 3) {
-            return false;
-        }
-
-        // MediaType 'fullscreen' auslassen
-        if ($mediaType == 'fullscreen') {
-            return false;
-        }
-
-        // Bilder der Kategorie 2 auslassen
-        if ($media->getCategoryId() == 2) {
-            return false;
-        }
-
-        // Interne REDAXO-MediaTypes (beginnen mit 'rex_') auslassen
-        if (strpos($mediaType, 'rex_') !== false) {
-            return false;
-        }
-    }
-    rex_media::clearInstance($item);
-    return true;
-});
-```
-
-#### `CACHE_WARMUP_GENERATE_PAGE `
+#### `CACHE_WARMUP_GENERATE_PAGE`
 
 Dieser EP wird unmittelbar vorm Generieren der Cachefiles jedes einzelnen Artikels angesprochen und ermöglicht, anhand verschiedener Kriterien den Artikel zu überspringen. Das Codebeispiel zeigt verschiedene Anwendungsfälle:
 
@@ -109,7 +70,7 @@ rex_extension::register('CACHE_WARMUP_GENERATE_PAGE', function (rex_extension_po
         return false;
     }
 
-    // Artikel der Kategorie 23 und darunter auslassen
+    // Artikel der Kategorie 23 und deren Kindkategorien auslassen
     if (in_array(23, $article->getPathAsArray())) {
         return false;
     }
@@ -123,19 +84,46 @@ rex_extension::register('CACHE_WARMUP_GENERATE_PAGE', function (rex_extension_po
 });
 ```
 
-### `CACHE_WARMUP_PAGES`
+#### `CACHE_WARMUP_GENERATE_IMAGE `
 
-Über diesen EP kann die Liste der vom AddOn erfassten Seiten modifiziert werden, um z. B. Seiten aus der Liste zu entfernen, deren Cachefiles nicht generiert werden sollen, oder um Seiten zu ergänzen, die aufgrund ihres Offline-Status’ nicht vom AddOn erfasst worden sind.
+Dieser EP wird unmittelbar vorm Generieren der Cachefiles jedes einzelnen Bilders angesprochen und ermöglicht, anhand verschiedener Kriterien das Bild zu überspringen. Das Codebeispiel zeigt verschiedene Anwendungsfälle:
 
 ```php
-rex_extension::register('CACHE_WARMUP_PAGES', function (rex_extension_point $ep) {
-    $pages = $ep->getSubject();
+rex_extension::register('CACHE_WARMUP_GENERATE_IMAGE', function (rex_extension_point $ep) {
+    list($image, $mediaType) = $ep->getParams();
 
-    // Seite hinzufügen (article_id, clang)
-    $pages[] = array("12", "1");
-    $pages[] = array("12", "2");
+    $media = rex_media::get($image);
+    if ($media) {
+        if ($media->isImage()) {
 
-    return $pages;
+            // Bilder vom Typ SVG auslassen
+            if ($media->getExtension() == 'svg') {
+                return false;
+            }
+           
+            // Bilder der Kategorie 2 auslassen
+            if ($media->getCategoryId() == 2) {
+                return false;
+            }
+
+            // MediaType 'photos' ausschließlich für Bilder der Kategorie 3 verwenden
+            if ($mediaType == 'photos' && $media->getCategoryId() != 3) {
+                return false;
+            }
+
+            // MediaType 'fullscreen' auslassen
+            if ($mediaType == 'fullscreen') {
+                return false;
+            }
+
+            // Interne REDAXO-MediaTypes (beginnen mit 'rex_') auslassen
+            if (strpos($mediaType, 'rex_') !== false) {
+                return false;
+            }
+        }
+        rex_media::clearInstance($item);
+    }
+    return true;
 });
 ```
 
@@ -178,6 +166,67 @@ rex_extension::register('CACHE_WARMUP_MEDIATYPES', function (rex_extension_point
         }
     }
     return $mediaTypes;
+});
+```
+
+### `CACHE_WARMUP_PAGES_WITH_CLANGS`
+
+Liefert alle zu generierenden Artikel in ihren Sprachen. Kann verwendet werden, um die Artikelliste zu bearbeiten, vor allem, um weitere Artikel mit Angabe der Sprache zu ergänzen, z. B. solche Artikel, die aufgrund ihres Offline-Status’ nicht vom AddOn erfasst worden sind.
+
+```php
+rex_extension::register('CACHE_WARMUP_PAGES_WITH_CLANGS', function (rex_extension_point $ep) {
+    $pages = $ep->getSubject();
+
+    // Seite hinzufügen (article_id, clang)
+    $pages[] = array(12, 1);
+    $pages[] = array(12, 2);
+
+    return $pages;
+});
+```
+
+### `CACHE_WARMUP_IMAGES_WITH_MEDIATYPES `
+
+Liefert alle zu generierenden Bilder mit ihren Medientypen. Kann verwendet werden, um die Bilderliste zu bearbeiten, vor allem, um weitere Bilder mit Angabe des Medientyps zu ergänzen.
+
+__Sehr nützlich für responsive Images und virtuelle Medientypen!__
+
+```php
+rex_extension::register('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', function (rex_extension_point $ep) {
+    $images = $ep->getSubject();
+
+    // Bild mit MediaType hinzufügen
+    $images[] = array('dave-grohl.jpg', 'portrait');
+
+    // Liste von Bildern mit Liste von MediaTypes hinzufügen
+    $imagesToAdd = array(
+        'pat-smear.jpg',
+        'nate-mendel.jpg',
+        'taylor-hawkins.jpg',
+        'chris-shiflett.jpg'
+    );
+    $mediaTypesToAdd = array(
+        'type1',
+        'type2',
+        'type3'
+    );
+    foreach ($imagesToAdd as $image) {
+
+        // Prüfen, Bilder vorhanden ist
+        $media = rex_media::get($image);
+        if ($media) {
+            if ($media->isImage()) {
+
+                // Bild mit Medientyp hinfügen
+                foreach ($mediaTypesToAdd as $mediaType) {
+                    $images[] = array($image, $mediaType);
+                }
+            }
+            rex_media::clearInstance($item);
+        }
+    }
+
+    return $images;
 });
 ```
 

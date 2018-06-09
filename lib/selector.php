@@ -10,13 +10,29 @@ abstract class cache_warmup_selector
     /**
      * Prepare all cache items
      *
+     * @param boolean $chunk Split items into chunks 
+     * @param boolean $useImageIds Use IDs for ref instead of names
      * @return array
      */
-    public static function prepareCacheItems()
+    public static function prepareCacheItems($chunk = false, $useImageIds = false)
     {
+        $images = self::getImagesArray();
+        $pages = self::getPagesArray();    
+       
+        // change image names to IDs
+        if ($useImageIds) {
+            $images['items'] = self::getImageIds($images['items']);
+        }
+
+        // chunk items
+        if ($chunk) {
+            $images['items'] = self::chunk($images['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
+            $pages['items'] = self::chunk($pages['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
+        }
+
         return array(
-            'images' => self::getChunkedImagesArray(),
-            'pages' => self::getChunkedPagesArray()
+            'images' => $images,
+            'pages' => $pages
         );
     }
 
@@ -136,13 +152,7 @@ abstract class cache_warmup_selector
 
             // filter images
             $images = self::filterImages($images);
-
-            // create extension point (EP) for developers to modify images
-            $images = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES', $images));
-            
-            // get image IDs
-            $images = self::getImageIds($images);
-
+           
             return $images;
         }
         return array();
@@ -185,13 +195,11 @@ abstract class cache_warmup_selector
     {
         $filteredImages = array();
 
-        $items = array_unique($items); // remove duplicate values
-
         foreach ($items as $item) {
-            $media = rex_media::get($item);
+            $media = rex_media::get($item[0]);
             if ($media) {
                 if ($media->isImage()) {
-                    $filteredImages[] = $media->getId();
+                    $filteredImages[] = array((int) $media->getId(), $item[1]);
                 }
                 rex_media::clearInstance($item);
             }
@@ -202,31 +210,45 @@ abstract class cache_warmup_selector
 
 
     /**
-     * Get all images and mediatypes as chunked array including 'count' and 'items'
+     * Get all images and mediatypes as array including 'count' and 'items'
      *
      * @return array
      */
-    private static function getChunkedImagesArray()
+    private static function getImagesArray()
     {
         $images = self::getImages();
         $mediaTypes = self::getMediaTypes();
 
+        // EPs to modify images and mediatypes
+        $images = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES', $images));
+        $mediaTypes = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_MEDIATYPES', $mediaTypes));
+
         $items = array();
         if (count($images) > 0 && count($mediaTypes) > 0) {
             foreach ($images as $image) {
-                foreach ($mediaTypes as $type) {
 
-                    // create extension point (EP) for developers to control cache generation
-                    $generateImage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_IMAGE', $generateImage = true, array($image, $type)));
+                $media = rex_media::get($image);
+                if ($media) {
+                    if ($media->isImage()) {
+                        foreach ($mediaTypes as $type) {
 
-                    if ($generateImage) {
-                        $items[] = array($image, $type);
+                            // EP to control cache generation
+                            $generateImage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_IMAGE', $generateImage = true, array($image, $type)));
+        
+                            if ($generateImage) {
+                                $items[] = array($image, $type);
+                            }
+                        }
                     }
+                    rex_media::clearInstance($item);
                 }
             }
         }
-        $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
-        return array('count' => count($items), 'items' => $chunkedItems);
+
+        // EP to modify images with mediatypes
+        $items = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', $items));
+
+        return array('count' => count($items), 'items' => $items);
     }
 
 
@@ -247,9 +269,6 @@ abstract class cache_warmup_selector
             foreach ($sql as $row) {
                 $mediaTypes[] = $row->getValue('name');
             }
-
-            // create extension point (EP) for developers to modify media types
-            $mediaTypes = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_MEDIATYPES', $mediaTypes));
 
             return $mediaTypes;
         }
@@ -273,14 +292,11 @@ abstract class cache_warmup_selector
             // if clang has status on/off (REX >=5.1), adjust query to select online pages only
             if (method_exists('rex_clang', 'isOnline')) {
                 $query .= ' AND c.status = ?';
-                $params = [1, 1];                
+                $params = [1, 1];
             }
 
             $sql = rex_sql::factory();
             $pages = $sql->getArray($query, $params, PDO::FETCH_NUM);
-
-            // create extension point (EP) for developers to modify pages
-            $pages = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_PAGES', $pages));
 
             return $pages;
         }
@@ -289,11 +305,11 @@ abstract class cache_warmup_selector
 
 
     /**
-     * Get all pages and languages as chunked array including 'count' and 'items'
+     * Get all pages and languages as array including 'count' and 'items'
      *
      * @return array
      */
-    private static function getChunkedPagesArray()
+    private static function getPagesArray()
     {
         $pages = self::getPages();
 
@@ -301,17 +317,19 @@ abstract class cache_warmup_selector
         if (count($pages) > 0) {
             foreach ($pages as $page) {
 
-                // create extension point (EP) for developers to control cache generation
+                // EP to control cache generation
                 $generatePage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_PAGE', $generatePage = true, $page));
 
                 if ($generatePage) {
-                    $items[] = $page;
+                    $items[] = array((int) $page[0], (int) $page[1]);
                 }
             }
         }
 
-        $chunkedItems = self::chunk($items, rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
-        return array('count' => count($items), 'items' => $chunkedItems);
+        // EP to modify pages with clangs
+        $items = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_PAGES_WITH_CLANGS', $items));
+
+        return array('count' => count($items), 'items' => $items);
     }
 
 
