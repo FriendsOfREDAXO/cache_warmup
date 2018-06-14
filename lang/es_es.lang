@@ -1,0 +1,25 @@
+cache_warmup_title           = Calentamiento de caché
+cache_warmup_description     = Genera la memoria caché para todas las páginas y las imágenes usadas por adelantado, de modo que el sitio web se ejecuta rápidamente en la primera llamada.
+
+cache_warmup_button_start    = Generar caché
+cache_warmup_button_success  = Genial, gracias
+cache_warmup_button_cancel   = Cancelar
+cache_warmup_button_again    = Intenta de nuevo
+
+cache_warmup_pages_title     = Generar páginas
+cache_warmup_pages_progress  = Página <span class = "cache-warmup__target__progress-from">1</span> de <span class = "cache-warmup__target__progress-to">...</span>
+
+cache_warmup_images_title    = Generando imágenes...
+cache_warmup_images_progress = Imagen <span class="cache-warmup__target__progress-from">1</span> de <span class="cache-warmup__target__progress-to">…</span>
+
+cache_warmup_time_elapsed    = Tiempo transcurrido
+
+cache_warmup_finished_title  = Terminado: caché generado
+cache_warmup_finished_text   = <p>La memoria caché se ha preparado para <strong><span class = "cache-warmup__target__finished-pages-num">páginas</span> <span class = "cache-warmup__target__finished-join">y</span> <span class = "cache-warmup__target__finished-images-num">imágenes</span> </strong>. Tomó un poco de <strong class = "cache-warmup__target__finished-tiempo-num"> </strong> y quieren ahorrar a los usuarios de esperar demasiado tiempo Al llamar el sitio web por primera vez.</p>
+
+cache_warmup_error_title     = Maldición, algo salió mal!
+cache_warmup_error_text      = <p>Se produjo un error al generar el caché. Encuentra detalles en la página de error. <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues">Github</a>. Agradecemos cualquier ayuda para mejorar la calidad del complemento. ¡Gracias!</p>
+cache_warmup_error_link      = Enlace a la página de error
+
+cache_warmup_nothing_title   = ¿Sin contenido?
+cache_warmup_nothing_text    = <p>Lo siento, pero no hay nada que almacenar en caché. No hay fotos ni textos O bien REDAXO está vacío, o los complementos necesarios (<code>media_manager</code> para imágenes y <code>estructura</code> para el contenido) no están instalados.</p>
