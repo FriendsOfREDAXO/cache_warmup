@@ -21,7 +21,7 @@ echo $fragment->parse('core/page/section.php');
 
 /* add cache warmup items JSON */
 
-echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_warmup_selector::prepareCacheItems()) . ';</script>';
+echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_warmup_selector::prepareCacheItems(true, true)) . ';</script>';
 ?>
 
 
