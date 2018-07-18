@@ -24,7 +24,7 @@ pages:
         perm: admin
 
 requires:
-    redaxo: '^5.0'
+    redaxo: '^5.1'
     php: '>=5.5'
 
 # define conflicts: prevents packages from update to avoid breaking changes
