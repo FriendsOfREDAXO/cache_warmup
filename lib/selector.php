@@ -201,7 +201,7 @@ abstract class cache_warmup_selector
                 if ($media->isImage()) {
                     $filteredImages[] = array((int) $media->getId(), $item[1]);
                 }
-                rex_media::clearInstance($item);
+                rex_media::clearInstance($item[0]);
             }
         }
 
@@ -240,7 +240,7 @@ abstract class cache_warmup_selector
                             }
                         }
                     }
-                    rex_media::clearInstance($item);
+                    rex_media::clearInstance($image);
                 }
             }
         }
