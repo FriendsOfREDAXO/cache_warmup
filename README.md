@@ -189,7 +189,7 @@ rex_extension::register('CACHE_WARMUP_PAGES_WITH_CLANGS', function (rex_extensio
 
 Liefert alle zu generierenden Bilder mit ihren Medientypen. Kann verwendet werden, um die Bilderliste zu bearbeiten, vor allem, um weitere Bilder mit Angabe des Medientyps zu ergänzen.
 
-__Sehr nützlich für responsive Images und virtuelle Medientypen!__
+🐿 __Protip:__ Dieser EP ist sehr nützlich im Umgang mit responsive Images und virtuellen Medientypen!
 
 ```php
 rex_extension::register('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', function (rex_extension_point $ep) {
