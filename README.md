@@ -121,7 +121,7 @@ rex_extension::register('CACHE_WARMUP_GENERATE_IMAGE', function (rex_extension_p
                 return false;
             }
         }
-        rex_media::clearInstance($item);
+        rex_media::clearInstance($image);
     }
     return true;
 });
@@ -222,7 +222,7 @@ rex_extension::register('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', function (rex_ext
                     $images[] = array($image, $mediaType);
                 }
             }
-            rex_media::clearInstance($item);
+            rex_media::clearInstance($image);
         }
     }
 
