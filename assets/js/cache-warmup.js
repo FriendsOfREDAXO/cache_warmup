@@ -1,7 +1,12 @@
 (function ($) {
     $(document).ready(function () {
 
-        var DEBUGMODE = false; // set debug mode
+        /* set debug mode */
+
+        var DEBUGMODE = false;
+        if ($('.rex-is-debugmode').length) {
+            var DEBUGMODE = true;
+        }
 
 
         /* debug log helper */
