@@ -5,7 +5,7 @@
 
         var DEBUGMODE = false;
         if ($('.rex-is-debugmode').length) {
-            var DEBUGMODE = true;
+            DEBUGMODE = true;
         }
 
 
