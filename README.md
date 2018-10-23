@@ -155,12 +155,12 @@ rex_extension::register('CACHE_WARMUP_MEDIATYPES', function (rex_extension_point
     $mediaTypes = $ep->getSubject();
     foreach ($mediaTypes as $k => $mediaType) {
 
-        // MediaType 'content' entfernen
+        // MediaType 'content' auslassen
         if ($mediaType === 'content') {
             unset($mediaTypes[$k]);
         }
 
-        // REDAXO-MediaTypes entfernen
+        // REDAXO-MediaTypes auslassen
         if (strpos($mediaType, 'rex_') !== false) {
             unset($mediaTypes[$k]);
         }
