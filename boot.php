@@ -5,16 +5,22 @@ if (rex_be_controller::getCurrentPage() == 'system/cache_warmup') {
     // min: min number of items to generate per request
     // max: max number of items to generate per request
     // ratio: multiplies with execution time to define number of items to generate per request
-    $chunksConfig = array(
-        'chunkSizeImages' => array('min' => 10, 'max' => 50, 'ratio' => 0.4),
-        'chunkSizePages' => array('min' => 100, 'max' => 1000, 'ratio' => 6)
-    );
-
+    if($this->getConfig('debug') != 1) {   
+        $chunksConfig = array(
+            'chunkSizeImages' => array('min' => $this->getConfig('image_min'), 'max' => $this->getConfig('image_max'), 'ratio' => $this->getConfig('image_ratio')),
+            'chunkSizePages' => array('min' => $this->getConfig('article_min'), 'max' => $this->getConfig('article_max'), 'ratio' => $this->getConfig('article_ratio'))
+        );
+    } else {
+        $chunksConfig = array(
+            'chunkSizeImages' => array('min' => 1, 'max' => 1, 'ratio' => 1),
+            'chunkSizePages' => array('min' => 1, 'max' => 1, 'ratio' => 1)
+        );
+    }
     // get `max_execution_time`
     // if it’s false, set to a low value
     $executionTime = ini_get('max_execution_time');
     if ($executionTime === false) {
-        $executionTime = 30;
+        $executionTime = $this->getConfig('max_execution_time');
     }
 
     // define number of items to generate per single request based on `max_execution_time`

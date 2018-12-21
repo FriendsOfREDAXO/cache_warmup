@@ -1,5 +1,5 @@
 package: cache_warmup
-version: '3.4.0'
+version: '3.5'
 author: Friends Of REDAXO
 supportpage: https://github.com/FriendsOfREDAXO/cache_warmup
 
@@ -22,9 +22,10 @@ pages:
     system/cache_warmup:
         title: translate:title
         perm: admin
+        pjax: false
 
 requires:
-    redaxo: '^5.1'
+    redaxo: '^5.6'
     php: '>=5.5'
 
 # define conflicts: prevents packages from update to avoid breaking changes

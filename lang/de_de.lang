@@ -23,3 +23,32 @@ cache_warmup_error_link      = Link zur Fehlerseite
 
 cache_warmup_nothing_title   = Keine Inhalte?
 cache_warmup_nothing_text    = <p>Tut mir leid, aber es gibt nichts zum Cachen. Keine Bilder und keine Texte. Entweder ist REDAXO leer, oder die notwendigen Addons (<code>media_manager</code> für Bilder und <code>structure</code> für Inhalte) sind nicht installiert.</p>
+
+cache_warmup_settings_title       = Einstellungen
+
+cache_warmup_settings_debug_label       = Debug
+cache_warmup_settings_debug_notice      = wenn aktiviert, werden die Artikel und Bilder einzeln durchlaufen sowie die nachfolgenden Einstellungen ignoriert.
+cache_warmup_settings_debug_option_on   = ja
+cache_warmup_settings_debug_option_off  = nein
+
+cache_warmup_settings_max_execution_time_label     = Maximale Skript-Laufzeit
+cache_warmup_settings_max_execution_time_notice    = Wenn <code>ini_get('max_execution_time')</code> nicht verfügbar, dann diesen Wert benutzen. Standard: <code>30</code> Sekunden.
+cache_warmup_settings_validate_default  = Bitte geben Sie eine Zahl ein.
+
+cache_warmup_settings_image_min_label     = Bilder min
+cache_warmup_settings_image_min_notice    = Anzahl der Bilder, die mindestens mit einem Aufruf generiert werden. Standard: <code>10</code>
+
+cache_warmup_settings_image_max_label     = Bilder max
+cache_warmup_settings_image_max_notice    = Anzahl der Bilder, die maximal mit einem Aufruf generiert werden. Standard: <code>50</code>
+
+cache_warmup_settings_image_ratio_label     = Bilder (Verhältnis)
+cache_warmup_settings_image_ratio_notice    = Menge der Bilder pro Aufruf im Verhältnis zur maximalen Skript-Laufzeit. Standard: <code>0.4</code>
+
+cache_warmup_settings_article_min_label     = Artikel min
+cache_warmup_settings_article_min_notice    = Anzahl der Artikel, die mindestens mit einem Aufruf generiert werden. Standard: <code>100</code>
+
+cache_warmup_settings_article_max_label     = Artikel max
+cache_warmup_settings_article_max_notice    = Anzahl der Artikel, die maximal mit einem Aufruf generiert werden. Standard: <code>1000</code>
+
+cache_warmup_settings_article_ratio_label     = Artikel (Verhältnis)
+cache_warmup_settings_article_ratio_notice    = Anzahl der Artikel, die mindestens mit einem Aufruf generiert werden. Standard: <code>6</code>
