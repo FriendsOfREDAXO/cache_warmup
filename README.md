@@ -12,29 +12,56 @@ Diese initialen Seitenaufrufe können leider recht langsam sein, vor allem, wenn
 
 Das Cache-Warmup-Addon kann alle verwendeten Inhalte der Website vorab generieren, so dass danach niemand mehr unnötig lange warten muss.
 
-## Fehler `RAM exceeded (internal)`, was hat das zu bedeuten?
+🐿 __Protip:__ Weil Cache-Warmup alle Bilder und Seiten einmal durchläuft, ist es nebenher sehr nützlich, um zu prüfen, ob die Website fehlerfrei ausgeliefert wird. Ob also keine Bilder zu groß sind, um vom Webserver verarbeitet zu werden, und ob alle Templates und Module richtig funktionieren.
 
-Der Arbeitsspeicher des Webservers reicht nicht aus, um alle Bilder zu verarbeiten. Das wird übrigens auch die Website selbst betreffen, nicht nur das Cache-Warmup-Addon. Deshalb sollte nun unbedingt der Medienpool geprüft und alle übergroßen (betrifft Pixel, nicht Dateigröße) Bilder manuell verkleinert werden — oder alternativ der Arbeitsspeicher des Webservers vergrößert werden.
+## 🤕 Fehler beim Warmup-Prozess
 
-Noch ein Hinweis zu Bildgrößen: Die Pixelwerte sind entscheidend dafür, wieviel RAM benötigt wird, damit REDAXOs Media Manager es verarbeiten kann. Ein Bild mit 4000 × 3000 px und 24 Bit Farbtiefe benötigt bereits 34 MB RAM. Soll daraus vom Media Manager ein Thumbnail in 1920 × 1440 px generiert werden, sind weitere 8 MB notwendig. Der Prozess selbst benötigt zudem (geschätzt) ein zusätzliches 1,5- bis 1,8-faches an Speicher, so dass nun insgesamt schon bis zu 75 MB erforderlich sind. Und natürlich benötigt auch REDAXO selbst noch etwas Speicher.  
-— Für dieses Beispiel sollte der Webserver also über mindestens 80–90 MB RAM verfügen, damit die Website fehlerfrei ausgeliefert werden kann.
+Es kommt immer wieder vor, dass Cache-Warmup nicht vollständig durchläuft, sondern vorher mit einem Fehler abbricht. An dieser Stelle ein paar Infos dazu, welche Fehler vorkommen können, und wie du damit umgehen kannst:
 
-🐿 __Protip:__ Das Cache-Warmup-Addon ist also auch nützlich, um zu prüfen, ob die Ressourcen des Webservers für die Auslieferung aller Bilder der Website ausreichen.
+### `RAM exceeded (internal)`
 
-## Ein anderer Fehler als oben. Was hat der nun zu bedeuten?
+__Ursache:__  
+Der Arbeitsspeicher des Webservers reicht nicht aus, um alle Bilder zu verarbeiten. Dies ist ein Problem für deine Website, denn es bedeutet, dass die betroffenen Bilder nicht von REDAXOs Media Manager ausgegeben werden können, sondern stattdessen ein Fehlerbild angezeigt wird.
 
-Es gibt viele weitere Fehler, die bei der Verwendung des Cache-Warmup-Addons auftreten können. Ein paar typische sind diese:
+__Maßnahmen:__  
+Du solltest nun unbedingt deinen Medienpool prüfen und alle übergroßen  Bilder — das betrifft nicht die Dateigröße, sondern die Pixel! — manuell verkleinern und neu hochladen. Wenn beispielsweise Bilder in deinem Medienpool liegen, die mit einer Digitalkamera aufgenommen worden sind und unbearbeitet hochgeladen wurden, dann sind sie womöglich ~6000 Pixel breit, und REDAXO würde mehr RAM benötigen, um davon Thumbnails zu erstellen, als auf typischen Webspaces verfügbar ist. Wenn du sie auf ~3000 Pixel verkleinerst und neu in den Medienpool lädst, sollte es hoffentlich klappen!  
+Wenn möglich, kannst du alternativ auch einfach den Arbeitsspeicher des Webservers vergrößern. 256 MB sollten gut funktionieren, wenn du mit großen Bildern arbeitest.
 
-* `Not Found (404)`  
-Die Seite zum Generieren des Caches konnte nicht gefunden werden. Vielleicht hilft an dieser Stelle am ehesten, das Addon neu zu installieren.
-* `Request Timeout (408)`  
-Das Generieren des Caches — vermutlich eines Bildcaches — hat zuviel Zeit benötigt, so dass der Vorgang vom Server abgebrochen wurde. Dies darf normalerweise nicht vorkommen, weil das Addon den Cache in kleinen Schritten generiert. Bitte einfach nochmal versuchen und/oder die Scriptlaufzeit (max\_execution\_time) des Servers erhöhen.
-* `Internal Server Error (500)`  
-Allgemeiner Fehler. Irgendwas ist schief gegangen. Die Fehlerseite zeigt hoffentlich weitere Details.
-* `Service Unavailable (503)`  
-Die Seite zum Generieren des Caches ist nicht erreichbar. Und vermutlich die gesamte Website nicht. Bitte später nochmal versuchen oder prüfen, ob der Server und REDAXO okay sind!
+### `Request Timeout (408)`
 
-💯 Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei [Github](https://github.com/FriendsOfREDAXO/cache_warmup/issues) gemeldet werden. Vielen Dank!
+__Ursache:__  
+Das Generieren des Caches dauert zu lange, so dass die maximale Skriptlaufzeit (max\_execution\_time) des Webservers überschritten wird. Cache-Warmup versucht zwar, abhängig von der Skriptlaufzeit den Cache in kleinen Schritten zu generieren, aber manchmal — etwa bei sehr großen Bildern im Medienpool oder aufwendigen Templates/Modulen — sind selbst kleine Schritte noch zu groß.
+
+__Maßnahmen:__  
+Du kannst Cache-Warmup verlangsamen, indem du diesen Code-Schnipsel in die `boot.php` des project-AddOns steckst. Der Wert für `$throttle` entspricht der Geschwindigkeit (1–100 in Prozent) und kann von dir angepasst werden. Im Code-Schnipsel wird beispielhaft mit 50% gearbeitet, so dass Cache-Warmup nur noch halb so schnell arbeitet wie üblich:
+
+```php
+// decelerate Cache Warmup addOn
+rex_extension::register('PACKAGES_INCLUDED', function () {   
+    $addon = rex_addon::get('cache_warmup');
+    $throttle = 50; // percent %
+
+    $addon->setConfig('chunkSizeImages', ceil($addon->getConfig('chunkSizeImages') * $throttle / 100));
+    $addon->setConfig('chunkSizePages', ceil($addon->getConfig('chunkSizePages') * $throttle / 100));
+});
+```
+
+### `Internal Server Error (500)`
+
+__Ursachen:__  
+Dieser Fehler kann verschiedene Ursachen haben. Manchmal entsteht er aufgrund von Fehlern im PHP-Code, z. B. innerhalb von Templates oder Modulen. In solchen Fällen müsstest du das Problem eigentlich auch auf der Website sehen, wenn du die betroffenen Seiten aufrufst.
+
+__Maßnahmen:__  
+Cache-Warmup bearbeitet normalerweise mehrere Seiten in einem Rutsch (etwa 100 bis 1000) und kann leider nicht unterscheiden, auf welchen davon Fehler auftreten. Um das herauszufinden, kannst du den Warmup für jede Seite einzeln durchlaufen lassen, indem du diesen Code-Schnipsel in die `boot.php` des project-AddOns mit aufnimmst:
+
+```php
+// run Cache Warmup addOn in single page mode
+rex_extension::register('PACKAGES_INCLUDED', function () {   
+    rex_addon::get('cache_warmup')->setConfig('chunkSizePages', 1);
+});
+```
+
+Womöglich dauert der Warmup-Vorgang nun sehr lange, das ist leider nicht zu ändern. Aber die URL der Fehlerseite liefert dir nun zumindest die ID samt ctype der Seite, auf der das Problem aufgetreten ist.
 
 ---
 
