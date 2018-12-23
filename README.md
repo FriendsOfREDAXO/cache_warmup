@@ -14,6 +14,8 @@ Das Cache-Warmup-Addon kann alle verwendeten Inhalte der Website vorab generiere
 
 🐿 __Protip:__ Weil Cache-Warmup alle Bilder und Seiten einmal durchläuft, ist es nebenher sehr nützlich, um zu prüfen, ob die Website fehlerfrei ausgeliefert wird. Ob also keine Bilder zu groß sind, um vom Webserver verarbeitet zu werden, und ob alle Templates und Module richtig funktionieren.
 
+---
+
 ## 🤕 Fehler beim Warmup-Prozess
 
 Es kommt immer wieder vor, dass Cache-Warmup nicht vollständig durchläuft, sondern vorher mit einem Fehler abbricht. An dieser Stelle ein paar Infos dazu, welche Fehler vorkommen können, und wie du damit umgehen kannst:
