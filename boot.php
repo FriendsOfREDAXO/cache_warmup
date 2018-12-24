@@ -19,7 +19,7 @@ if (rex_be_controller::getCurrentPage() == 'system/cache_warmup') {
 
     // define number of items to generate per single request based on `max_execution_time`
     // higher values reduce number of requests but extend script time
-    // (hint: enable debug mode in cache-warmup.js to report execution times)
+    // (hint: enable debug mode in REDAXO to report execution times)
     foreach ($chunksConfig as $k => $v) {
         $numOfItems = round($executionTime * $v['ratio']);
 
