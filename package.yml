@@ -22,9 +22,12 @@ pages:
     system/cache_warmup:
         title: translate:title
         perm: admin
+        subpages:
+            start: { title: translate:page_start }
+            readme: { title: translate:page_readme, subPath: README.md }
 
 requires:
-    redaxo: '^5.1'
+    redaxo: '^5.2'
     php: '>=5.5'
 
 # define conflicts: prevents packages from update to avoid breaking changes

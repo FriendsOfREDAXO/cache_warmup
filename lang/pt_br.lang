@@ -1,5 +1,7 @@
 cache_warmup_title           = Cache Warmup
 cache_warmup_description     = Gera arquivos de cache com antecedência para todas as páginas e imagens usadas para melhorar o desempenho inicial do site.
+cache_warmup_page_start      = Começar
+cache_warmup_page_readme     = Ajuda e documentação
 
 cache_warmup_button_start    = Gera chachês
 cache_warmup_button_success  = Legal, obrigada!

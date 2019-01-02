@@ -1,5 +1,7 @@
 cache_warmup_title           = Calentamiento de caché
 cache_warmup_description     = Genera la memoria caché para todas las páginas y las imágenes usadas por adelantado, de modo que el sitio web se ejecuta rápidamente en la primera llamada.
+cache_warmup_page_start      = Comienzo
+cache_warmup_page_readme     = Ayuda y documentación
 
 cache_warmup_button_start    = Generar caché
 cache_warmup_button_success  = Genial, gracias
