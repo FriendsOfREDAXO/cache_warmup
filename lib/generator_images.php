@@ -8,7 +8,7 @@ class cache_warmup_generator_images extends cache_warmup_generator
 
     /**
      * Generate cache for given items
-     * 
+     *
      * @param array $items
      * @return array
      * @throws rex_sql_exception

@@ -152,7 +152,7 @@ abstract class cache_warmup_selector
 
             // filter images
             $images = self::filterImages($images);
-           
+
             return $images;
         }
         return array();
@@ -234,7 +234,7 @@ abstract class cache_warmup_selector
 
                             // EP to control cache generation
                             $generateImage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_IMAGE', $generateImage = true, array($image, $type)));
-        
+
                             if ($generateImage) {
                                 $items[] = array($image, $type);
                             }
@@ -288,7 +288,7 @@ abstract class cache_warmup_selector
 
             $query = 'SELECT a.id, a.clang_id FROM ' . rex::getTable('article') . ' AS a INNER JOIN ' . rex::getTable('clang') . ' AS c ON a.clang_id = c.id WHERE a.status = ?';
             $params = [1];
-            
+
             // if clang has status on/off (REX >=5.1), adjust query to select online pages only
             if (method_exists('rex_clang', 'isOnline')) {
                 $query .= ' AND c.status = ?';
