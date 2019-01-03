@@ -10,15 +10,15 @@ abstract class cache_warmup_selector
     /**
      * Prepare all cache items
      *
-     * @param boolean $chunk Split items into chunks 
+     * @param boolean $chunk Split items into chunks
      * @param boolean $useImageIds Use IDs for ref instead of names
      * @return array
      */
     public static function prepareCacheItems($chunk = false, $useImageIds = false)
     {
+        $pages = self::getPagesArray();
         $images = self::getImagesArray();
-        $pages = self::getPagesArray();    
-       
+
         // change image names to IDs
         if ($useImageIds) {
             $images['items'] = self::getImageIds($images['items']);
@@ -26,13 +26,13 @@ abstract class cache_warmup_selector
 
         // chunk items
         if ($chunk) {
-            $images['items'] = self::chunk($images['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
             $pages['items'] = self::chunk($pages['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
+            $images['items'] = self::chunk($images['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
         }
 
         return array(
-            'images' => $images,
-            'pages' => $pages
+            'pages' => $pages,
+            'images' => $images
         );
     }
 
@@ -187,11 +187,12 @@ abstract class cache_warmup_selector
 
     /**
      * Get image IDs
+     * returns sth like `array(17, 'content')` from `array('image.jpg', 'content')`
      *
      * @param array $items
      * @return array
      */
-    private static function getImageIds(array $items)
+    public static function getImageIds(array $items)
     {
         $filteredImages = array();
 
@@ -203,6 +204,41 @@ abstract class cache_warmup_selector
                 }
                 rex_media::clearInstance($item);
             }
+        }
+
+        return $filteredImages;
+    }
+
+
+    /**
+     * Get image names
+     * returns sth like `array('image.jpg', 'portrait')` from `array(23, 'portrait')`
+     *
+     * @param array $items
+     * @return array
+     */
+    public static function getImageNames(array $items)
+    {
+        $filteredImages = array();
+
+        // filter image ids
+        $imageIds = array_column($items, 0);
+        $imageIds = array_filter($imageIds, function($v) {
+            return preg_match('/^\d+$/', $v) && intval($v) > 0; // sanitize
+        });
+        $imageIds = array_unique($imageIds);
+
+        // fetch images names for selected ids
+        $images = array();
+        $sql = rex_sql::factory();
+        $sql->setQuery('SELECT id, filename FROM ' . rex::getTablePrefix() . 'media WHERE id IN (' . implode(',', $imageIds) . ')');
+        foreach ($sql as $row) {
+            $images[$row->getValue('id')] = $row->getValue('filename');
+        }
+
+        // loop through items and replace ids with names
+        foreach ($items as $item) {
+            $filteredImages[] = array($images[$item[0]], $item[1]);
         }
 
         return $filteredImages;

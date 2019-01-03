@@ -15,14 +15,17 @@
 $pages = rex_get('pages', 'string');
 if (!empty($pages)) {
     $generator = new cache_warmup_generator_pages;
-    $generator->generateCache(cache_warmup_generator::prepareItems($pages));
+    $items = cache_warmup_generator::prepareItems($pages);
+    $generator->generateCache($items);
 }
 
 // generate image cache
 $images = rex_get('images', 'string');
 if (!empty($images)) {
     $generator = new cache_warmup_generator_images;
-    $generator->generateCache(cache_warmup_generator::prepareItems($images));
+    $items = cache_warmup_generator::prepareItems($images);
+    $items = cache_warmup_selector::getImageNames($items);
+    $generator->generateCache($items);
 }
 
 // clear output
