@@ -295,12 +295,13 @@
          * @param generatorUrl
          * @constructor
          */
-        var Config = function (itemsJSON, generatorUrl) {
+        var Config = function (itemsJSON, generatorUrl, token) {
             this._items = itemsJSON;
             this._generatorUrl = generatorUrl;
+            this._token = token;
 
             if (!$.isEmptyObject(this._items) && this._generatorUrl.length) {
-                debug.info('new Config for ' + this._getDebugInfo() + 'generator at ' + generatorUrl);
+                debug.info("new Config for " + this._getDebugInfo() + "generator at " + generatorUrl + " with token " + token);
             }
             else {
                 debug.error('new Config: no content.');
@@ -338,6 +339,10 @@
                 return (Object.keys(this._items));
             },
 
+            generateTokenParameter: function () {
+                return this._token ? "&_csrf_token=" + this._token : null;
+            },
+
             getUrlsForType: function (type) {
                 var urls = [];
                 var chunk = [];
@@ -348,7 +353,7 @@
                             chunk.push(this._items[type].items[i][j].join('.'));
                         }
                         urls.push({
-                            'absolute': this._generatorUrl + '&' + type + '=' + chunk.join(),
+                            'absolute': this._generatorUrl + '&' + type + '=' + chunk.join() + this.generateTokenParameter(),
                             'slug': type + '=' + chunk.join(),
                             'itemsNum': jmax
                         });
@@ -379,7 +384,6 @@
                 var that = this;
                 var urls = this.cacheWarmup.config.getUrlsForType(type);
                 var cachedItemsCount = 0;
-                var csrfParameter = _csrf_token ? "&_csrf_token=" + _csrf_token : '';
 
                 if (urls.length) {
 
@@ -389,7 +393,7 @@
                             timerStart = new Date().getTime();
                             // send request
                             return $.ajax({
-                                    url: url.absolute + csrfParameter,
+                                    url: url.absolute,
                                     cache: false,
                                     beforeSend: function () {
                                         // update components
@@ -457,7 +461,7 @@
             debug.info('new CacheWarmup');
 
             // prepare config
-            this.config = new Config(config.itemsJSON, config.generatorUrl);
+            this.config = new Config(config.itemsJSON, config.generatorUrl, config.token);
             if (this.config.hasItems()) {
 
                 // set up components
@@ -602,7 +606,7 @@
 
             new CacheWarmup({
                 'itemsJSON': cacheWarmupItems,
-                '_csrf_token': _csrf_token || false,
+                'token': cacheWarmupToken || false,
                 'generatorUrl': window.location.origin + window.location.pathname + '?page=cache_warmup/generator',
                 'templates': [
                     'content_task', 'content_info',
