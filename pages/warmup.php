@@ -24,7 +24,7 @@ echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_wa
 
 /* CSRF token (REX 5.5+) */
 if (class_exists('rex_csrf_token')) {
-    echo '<script>var _csrf_token = "' . rex_csrf_token::factory('cache_warmup_generator')->getValue() . '";</script>';
+    echo '<script>var cacheWarmupToken = "' . rex_csrf_token::factory('cache_warmup_generator')->getValue() . '";</script>';
 }
 ?>
 
