@@ -379,6 +379,7 @@
                 var that = this;
                 var urls = this.cacheWarmup.config.getUrlsForType(type);
                 var cachedItemsCount = 0;
+                var csrfParameter = _csrf_token ? "&_csrf_token=" + _csrf_token : '';
 
                 if (urls.length) {
 
@@ -388,7 +389,7 @@
                             timerStart = new Date().getTime();
                             // send request
                             return $.ajax({
-                                    url: url.absolute,
+                                    url: url.absolute + csrfParameter,
                                     cache: false,
                                     beforeSend: function () {
                                         // update components
@@ -601,6 +602,7 @@
 
             new CacheWarmup({
                 'itemsJSON': cacheWarmupItems,
+                '_csrf_token': _csrf_token || false,
                 'generatorUrl': window.location.origin + window.location.pathname + '?page=cache_warmup/generator',
                 'templates': [
                     'content_task', 'content_info',

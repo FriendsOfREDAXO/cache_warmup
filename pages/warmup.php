@@ -19,9 +19,13 @@ $fragment->setVar('body', $body, false);
 $fragment->setVar('footer', $footer, false);
 echo $fragment->parse('core/page/section.php');
 
-/* add cache warmup items JSON */
-
+/* cache warmup items JSON */
 echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_warmup_selector::prepareCacheItems(true, true)) . ';</script>';
+
+/* CSRF token (REX 5.5+) */
+if (class_exists('rex_csrf_token')) {
+    echo '<script>var _csrf_token = "' . rex_csrf_token::factory('cache_warmup_generator')->getValue() . '";</script>';
+}
 ?>
 
 

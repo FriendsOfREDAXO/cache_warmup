@@ -11,22 +11,43 @@
  * - Page will return blank if stuff works out as expected.
  */
 
-// generate page cache
-$pages = rex_get('pages', 'string');
-if (!empty($pages)) {
-    $generator = new cache_warmup_generator_pages;
-    $items = cache_warmup_generator::prepareItems($pages);
-    $generator->generateCache($items);
+$proceed = true;
+
+if (class_exists('rex_csrf_token')) {
+
+    $mode = rex::getProperty('redaxo');
+    rex::setProperty('redaxo', true); // switch REDAXO to backend mode
+    if (!rex_csrf_token::factory('cache_warmup_generator')->isValid()) {
+        $proceed = false; // token not valid, do not proceed!
+    }
+    rex::setProperty('redaxo', $mode); // reset to previous mode
 }
 
-// generate image cache
-$images = rex_get('images', 'string');
-if (!empty($images)) {
-    $generator = new cache_warmup_generator_images;
-    $items = cache_warmup_generator::prepareItems($images);
-    $items = cache_warmup_selector::getImageNames($items);
-    $generator->generateCache($items);
-}
+if (!$proceed) {
 
-// clear output
-cache_warmup_writer::clearOutput();
+    // do not proceed but send a 403 forbidden
+    rex_response::cleanOutputBuffers();
+    rex_response::setStatus(rex_response::HTTP_FORBIDDEN);
+}
+else {
+
+    // generate page cache
+    $pages = rex_get('pages', 'string');
+    if (!empty($pages)) {
+        $generator = new cache_warmup_generator_pages;
+        $items = cache_warmup_generator::prepareItems($pages);
+        $generator->generateCache($items);
+    }
+
+    // generate image cache
+    $images = rex_get('images', 'string');
+    if (!empty($images)) {
+        $generator = new cache_warmup_generator_images;
+        $items = cache_warmup_generator::prepareItems($images);
+        $items = cache_warmup_selector::getImageNames($items);
+        $generator->generateCache($items);
+    }
+
+    // clear output
+    cache_warmup_writer::clearOutput();
+}
