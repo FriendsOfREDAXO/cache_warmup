@@ -27,7 +27,7 @@ if (class_exists('rex_csrf_token')) {
     echo '<script>var cacheWarmupToken = "' . rex_csrf_token::factory('cache_warmup_generator')->getValue() . '";</script>';
 }
 
-/* disable minibar */
+/* disable minibar (REX 5.7+) */
 if (class_exists('rex_minibar') && rex_minibar::getInstance()->isActive() === null) {
     rex_minibar::getInstance()->setActive(false);
 }
