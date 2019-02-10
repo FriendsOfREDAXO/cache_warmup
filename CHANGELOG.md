@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [3.6.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.6.0) – 10.02.2019
+
+### Features
+
+* Funktioniert mit YForm 3 (#103)
+
+
 ## [3.5.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.5.0) – 24.12.2018
 
 ### Features
@@ -13,7 +20,7 @@
 
 ### Features
 
-* Use `includeCurrentPageSubPath` (#94 @christophboecker)  
+* Use `includeCurrentPageSubPath` (#94 @christophboecker)
    Requires at least REDAXO 5.1
 
 ### Bugfixes
@@ -53,7 +60,7 @@ Hilfe zur Benutzung der neuen Extension Points findet ihr in der README! 🚀
 
 ### Bugfixes
 
-* Konfiguration nur noch bei Aufruf der Warmup-Seite bearbeiten (#76 @IngoWinter)  
+* Konfiguration nur noch bei Aufruf der Warmup-Seite bearbeiten (#76 @IngoWinter)
 Verbessert die Performance und vermeidet Session-Lock-Probleme.
 
 
@@ -89,7 +96,7 @@ Der Media-Manager 2.3.0 enthält eine separate Methode (`rex_media_manager::crea
 
 ### Features
 
-* Wechsel in den Frontend-Modus vorm Generieren der Cache-Files (#68)  
+* Wechsel in den Frontend-Modus vorm Generieren der Cache-Files (#68)
 Dadurch werden auch Inhaltsanpassungen fremder AddOns beachtet, die mittels Extension Points die Ausgabe beeinflussen, z. B. der Slice-Status on/off durch [blÖcks](https://github.com/FriendsOfREDAXO/bloecks).
 * Portugiesisch, vielen Dank an Taina Soares! (#67)
 
@@ -158,8 +165,8 @@ Für dieses Release wurden einige Fehler behoben und Funktionen verbessert, so d
 
 ### Bugfixes
 
-* Popup nun mit Hinweis, falls keine Artikel oder Bilder zum Generieren vorhanden sind. #23 
-* Bilder konnten nicht in Sprachen (clang) oder Medien (media) hinterlegt werden. #25 
+* Popup nun mit Hinweis, falls keine Artikel oder Bilder zum Generieren vorhanden sind. #23
+* Bilder konnten nicht in Sprachen (clang) oder Medien (media) hinterlegt werden. #25
 
 
 ## [1.0.1](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/1.0.1) – 29.07.2016
@@ -192,16 +199,16 @@ Für dieses Release wurden einige Fehler behoben und Funktionen verbessert, so d
 
 ### Bugfixes
 
-* Assets-Caching vermeiden + kleine JS-Fixes #12 
-* Fehler vermeiden, wenn kein Metainfo-Feld existiert #13 
-* package.yml Verbesserungen #14 
+* Assets-Caching vermeiden + kleine JS-Fixes #12
+* Fehler vermeiden, wenn kein Metainfo-Feld existiert #13
+* package.yml Verbesserungen #14
 
 
 ## [1.0.0-beta3](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/1.0.0-beta3) – 18.05.2016
 
 ### Bugfixes
 
-* JS-Fehler & Popup-Größe #10 
+* JS-Fehler & Popup-Größe #10
 
 
 ## [1.0.0-beta2](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/1.0.0-beta2) – 18.05.2016
