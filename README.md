@@ -80,11 +80,11 @@ Das AddOn stellt verschiedene Extension Points bereit, um in die Auswahl der Art
 | `CACHE_WARMUP_PAGES_WITH_CLANGS`        | Liefert alle zu generierenden Artikel in ihren Sprachen. Kann verwendet werden, um die Artikelliste zu bearbeiten, vor allem, um weitere Artikel mit Angabe der Sprache zu ergänzen. |
 | `CACHE_WARMUP_IMAGES_WITH_MEDIATYPES` | Liefert alle zu generierenden Bilder mit ihren Medientypen. Kann verwendet werden, um die Bilderliste zu bearbeiten, vor allem, um weitere Bilder mit Angabe des Medientyps zu ergänzen. |
 
-### Anwendungsbeispiele für die Nutzung von EPs
+## Anwendungsbeispiele für die Nutzung von EPs
 
 Die Beispiele zeigen verschiedene Anwendungsfälle und können beispielsweise __in der `boot.php` des project-AddOns__ hinterlegt werden. 
 
-#### `CACHE_WARMUP_GENERATE_PAGE`
+### `CACHE_WARMUP_GENERATE_PAGE`
 
 Dieser EP wird unmittelbar vorm Generieren der Cachefiles jedes einzelnen Artikels angesprochen und ermöglicht, anhand verschiedener Kriterien den Artikel zu überspringen. Das Codebeispiel zeigt verschiedene Anwendungsfälle:
 
@@ -113,7 +113,7 @@ rex_extension::register('CACHE_WARMUP_GENERATE_PAGE', function (rex_extension_po
 });
 ```
 
-#### `CACHE_WARMUP_GENERATE_IMAGE `
+### `CACHE_WARMUP_GENERATE_IMAGE `
 
 Dieser EP wird unmittelbar vorm Generieren der Cachefiles jedes einzelnen Bilders angesprochen und ermöglicht, anhand verschiedener Kriterien das Bild zu überspringen. Das Codebeispiel zeigt verschiedene Anwendungsfälle:
 
@@ -156,7 +156,7 @@ rex_extension::register('CACHE_WARMUP_GENERATE_IMAGE', function (rex_extension_p
 });
 ```
 
-#### `CACHE_WARMUP_IMAGES `
+### `CACHE_WARMUP_IMAGES `
 
 Über diesen EP kann die Liste der vom AddOn erfassten Bilder modifiziert werden, um z. B. Bilder aus der Liste zu entfernen, deren Cachefiles nicht generiert werden sollen, oder um Bilder zu ergänzen, die aus verschiedenen Gründen nicht vom AddOn erfasst worden sind.
 
@@ -175,7 +175,7 @@ rex_extension::register('CACHE_WARMUP_IMAGES', function (rex_extension_point $ep
 });
 ```
 
-#### `CACHE_WARMUP_MEDIATYPES `
+### `CACHE_WARMUP_MEDIATYPES `
 
 Über diesen EP können die im System hinterlegten Mediatypen modifiziert werden, um z. B. Mediatypen aus der Liste zu entfernen, die nicht zum Generieren von Cachefiles verwendet werden sollen, oder um eigene Mediatypen zu ergänzen.
 
