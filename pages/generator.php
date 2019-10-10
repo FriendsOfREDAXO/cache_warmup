@@ -50,4 +50,5 @@ else {
 
     // clear output
     cache_warmup_writer::clearOutput();
+    rex_response::setStatus(rex_response::HTTP_OK);
 }
