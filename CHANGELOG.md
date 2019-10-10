@@ -1,6 +1,13 @@
 # Changelog
 
 
+## [3.6.1](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.6.1) – 10.10.2019
+
+### Bugfixes
+
+* Generator responds with HTTP 200 to provide YRewrite 2.6+ compat (#106) 
+
+
 ## [3.6.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.6.0) – 10.02.2019
 
 ### Features
