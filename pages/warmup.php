@@ -28,7 +28,7 @@ if (class_exists('rex_csrf_token')) {
 }
 
 /* disable minibar (REX 5.7+) */
-if (class_exists('rex_minibar') && rex_minibar::getInstance()->isActive() === null) {
+if (class_exists('rex_minibar') && null === rex_minibar::getInstance()->isActive()) {
     rex_minibar::getInstance()->setActive(false);
 }
 ?>

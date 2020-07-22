@@ -2,16 +2,16 @@
 
 /**
  * Class cache_warmup_selector
- * Selects images, media types, pages and languages
+ * Selects images, media types, pages and languages.
  */
 abstract class cache_warmup_selector
 {
-
     /**
-     * Prepare all cache items
+     * Prepare all cache items.
      *
-     * @param boolean $chunk Split items into chunks
-     * @param boolean $useImageIds Use IDs for ref instead of names
+     * @param bool $chunk       Split items into chunks
+     * @param bool $useImageIds Use IDs for ref instead of names
+     *
      * @return array
      */
     public static function prepareCacheItems($chunk = false, $useImageIds = false)
@@ -30,25 +30,24 @@ abstract class cache_warmup_selector
             $images['items'] = self::chunk($images['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizeImages'));
         }
 
-        return array(
+        return [
             'pages' => $pages,
-            'images' => $images
-        );
+            'images' => $images,
+        ];
     }
-
 
     /**
      * Get all images being used in REDAXO (pages, meta, yforms)
-     * »X never, ever marks the spot.« (-- Indiana Jones)
+     * »X never, ever marks the spot.« (-- Indiana Jones).
+     *
+     * @throws rex_sql_exception
      *
      * @return array
-     * @throws rex_sql_exception
      */
     private static function getImages()
     {
         if (rex_addon::get('media_manager')->isAvailable() && rex_addon::get('structure')->isAvailable()) {
-
-            $images = array();
+            $images = [];
             $sql = rex_sql::factory();
 
             /* find images in pages (media1-10, medialist1-10) */
@@ -72,7 +71,7 @@ abstract class cache_warmup_selector
             /* find images in yforms (be_media, be_medialist, mediafile) */
 
             if (rex_addon::get('yform')->isAvailable()) {
-                $yforms = array();
+                $yforms = [];
 
                 // get tables and fields where 'be_media' and 'be_medialist' are used
                 $sql->setQuery('SELECT table_name,name FROM ' . rex::getTablePrefix() . 'yform_field WHERE type_name LIKE "be_media%" OR type_name LIKE "mediafile"');
@@ -103,7 +102,7 @@ abstract class cache_warmup_selector
             /* find images in metainfos (REX_MEDIA_WIDGET, REX_MEDIALIST_WIDGET) */
 
             if (rex_addon::get('metainfo')->isAvailable()) {
-                $metainfos = array();
+                $metainfos = [];
 
                 // get 'REX_MEDIA_WIDGET' and 'REX_MEDIALIST_WIDGET' ids
                 $sql->setQuery('SELECT id FROM ' . rex::getTablePrefix() . 'metainfo_type WHERE label LIKE "REX_MEDIA%"');
@@ -119,11 +118,11 @@ abstract class cache_warmup_selector
 
                 // find images in metas (article, clang, media)
                 if (isset($metainfos['names'])) {
-                    $tablesFrom = array(
+                    $tablesFrom = [
                         rex::getTablePrefix() . 'article',
                         rex::getTablePrefix() . 'clang',
-                        rex::getTablePrefix() . 'media'
-                    );
+                        rex::getTablePrefix() . 'media',
+                    ];
                     foreach ($tablesFrom as $table) {
                         $sql->setQuery('SELECT * FROM ' . $table);
                         if ($sql->getRows() > 0) {
@@ -155,19 +154,17 @@ abstract class cache_warmup_selector
 
             return $images;
         }
-        return array();
+        return [];
     }
 
-
     /**
-     * Filter images: remove duplicate images and non-image items
+     * Filter images: remove duplicate images and non-image items.
      *
-     * @param array $items
      * @return array
      */
     private static function filterImages(array $items)
     {
-        $filteredImages = array();
+        $filteredImages = [];
 
         $items = array_unique($items); // remove duplicate values
 
@@ -184,23 +181,21 @@ abstract class cache_warmup_selector
         return $filteredImages;
     }
 
-
     /**
      * Get image IDs
-     * returns sth like `array(17, 'content')` from `array('image.jpg', 'content')`
+     * returns sth like `array(17, 'content')` from `array('image.jpg', 'content')`.
      *
-     * @param array $items
      * @return array
      */
     public static function getImageIds(array $items)
     {
-        $filteredImages = array();
+        $filteredImages = [];
 
         foreach ($items as $item) {
             $media = rex_media::get($item[0]);
             if ($media) {
                 if ($media->isImage()) {
-                    $filteredImages[] = array((int) $media->getId(), $item[1]);
+                    $filteredImages[] = [(int) $media->getId(), $item[1]];
                 }
                 rex_media::clearInstance($item);
             }
@@ -209,27 +204,25 @@ abstract class cache_warmup_selector
         return $filteredImages;
     }
 
-
     /**
      * Get image names
-     * returns sth like `array('image.jpg', 'portrait')` from `array(23, 'portrait')`
+     * returns sth like `array('image.jpg', 'portrait')` from `array(23, 'portrait')`.
      *
-     * @param array $items
      * @return array
      */
     public static function getImageNames(array $items)
     {
-        $filteredImages = array();
+        $filteredImages = [];
 
         // filter image ids
         $imageIds = array_column($items, 0);
-        $imageIds = array_filter($imageIds, function($v) {
-            return preg_match('/^\d+$/', $v) && intval($v) > 0; // sanitize
+        $imageIds = array_filter($imageIds, static function ($v) {
+            return preg_match('/^\d+$/', $v) && (int) $v > 0; // sanitize
         });
         $imageIds = array_unique($imageIds);
 
         // fetch images names for selected ids
-        $images = array();
+        $images = [];
         $sql = rex_sql::factory();
         $sql->setQuery('SELECT id, filename FROM ' . rex::getTablePrefix() . 'media WHERE id IN (' . implode(',', $imageIds) . ')');
         foreach ($sql as $row) {
@@ -238,15 +231,14 @@ abstract class cache_warmup_selector
 
         // loop through items and replace ids with names
         foreach ($items as $item) {
-            $filteredImages[] = array($images[$item[0]], $item[1]);
+            $filteredImages[] = [$images[$item[0]], $item[1]];
         }
 
         return $filteredImages;
     }
 
-
     /**
-     * Get all images and mediatypes as array including 'count' and 'items'
+     * Get all images and mediatypes as array including 'count' and 'items'.
      *
      * @return array
      */
@@ -259,20 +251,18 @@ abstract class cache_warmup_selector
         $images = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES', $images));
         $mediaTypes = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_MEDIATYPES', $mediaTypes));
 
-        $items = array();
+        $items = [];
         if (count($images) > 0 && count($mediaTypes) > 0) {
             foreach ($images as $image) {
-
                 $media = rex_media::get($image);
                 if ($media) {
                     if ($media->isImage()) {
                         foreach ($mediaTypes as $type) {
-
                             // EP to control cache generation
-                            $generateImage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_IMAGE', $generateImage = true, array($image, $type)));
+                            $generateImage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_IMAGE', $generateImage = true, [$image, $type]));
 
                             if ($generateImage) {
-                                $items[] = array($image, $type);
+                                $items[] = [$image, $type];
                             }
                         }
                     }
@@ -284,20 +274,20 @@ abstract class cache_warmup_selector
         // EP to modify images with mediatypes
         $items = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', $items));
 
-        return array('count' => count($items), 'items' => $items);
+        return ['count' => count($items), 'items' => $items];
     }
 
-
     /**
-     * Get all media types as defined in media manager addon
+     * Get all media types as defined in media manager addon.
+     *
+     * @throws rex_sql_exception
      *
      * @return array
-     * @throws rex_sql_exception
      */
     private static function getMediaTypes()
     {
         if (rex_addon::get('media_manager')->isAvailable()) {
-            $mediaTypes = array();
+            $mediaTypes = [];
 
             $sql = rex_sql::factory();
             $sql->setQuery('SELECT name FROM ' . rex::getTablePrefix() . 'media_manager_type');
@@ -308,20 +298,19 @@ abstract class cache_warmup_selector
 
             return $mediaTypes;
         }
-        return array();
+        return [];
     }
 
-
     /**
-     * Get all pages being online
+     * Get all pages being online.
+     *
+     * @throws rex_sql_exception
      *
      * @return array
-     * @throws rex_sql_exception
      */
     private static function getPages()
     {
         if (rex_addon::get('structure')->isAvailable()) {
-
             $query = 'SELECT a.id, a.clang_id FROM ' . rex::getTable('article') . ' AS a INNER JOIN ' . rex::getTable('clang') . ' AS c ON a.clang_id = c.id WHERE a.status = ?';
             $params = [1];
 
@@ -336,12 +325,11 @@ abstract class cache_warmup_selector
 
             return $pages;
         }
-        return array();
+        return [];
     }
 
-
     /**
-     * Get all pages and languages as array including 'count' and 'items'
+     * Get all pages and languages as array including 'count' and 'items'.
      *
      * @return array
      */
@@ -349,15 +337,14 @@ abstract class cache_warmup_selector
     {
         $pages = self::getPages();
 
-        $items = array();
+        $items = [];
         if (count($pages) > 0) {
             foreach ($pages as $page) {
-
                 // EP to control cache generation
                 $generatePage = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_GENERATE_PAGE', $generatePage = true, $page));
 
                 if ($generatePage) {
-                    $items[] = array((int) $page[0], (int) $page[1]);
+                    $items[] = [(int) $page[0], (int) $page[1]];
                 }
             }
         }
@@ -365,15 +352,14 @@ abstract class cache_warmup_selector
         // EP to modify pages with clangs
         $items = rex_extension::registerPoint(new rex_extension_point('CACHE_WARMUP_PAGES_WITH_CLANGS', $items));
 
-        return array('count' => count($items), 'items' => $items);
+        return ['count' => count($items), 'items' => $items];
     }
 
-
     /**
-     * Split an array into chunks
+     * Split an array into chunks.
      *
-     * @param array $items
      * @param int $chunkSize
+     *
      * @return array
      */
     private static function chunk(array $items, $chunkSize)
