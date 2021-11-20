@@ -37,4 +37,3 @@ conflicts:
         media_manager: '>=3'
         metainfo: '>=3'
         structure: '>=3'
-        yform: '>=4'
