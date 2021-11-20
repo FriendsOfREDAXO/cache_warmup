@@ -28,7 +28,7 @@ pages:
 
 requires:
     redaxo: '^5.2'
-    php: '>=5.5'
+    php: '>=7'
 
 # define conflicts: prevents packages from update to avoid breaking changes
 # https://github.com/FriendsOfREDAXO/cache_warmup/pull/55#issuecomment-280906737
