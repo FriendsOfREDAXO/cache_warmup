@@ -1,6 +1,14 @@
 # Changelog: Cache Warmup
 
 
+## [3.7.1](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.7.1) – 12.06.2022
+
+### Bugfixes
+
+* Externe Pakete aktualisiert
+* Code aufgeräumt
+
+
 ## [3.7.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.7.0) – 20.11.2021
 
 ### Features
