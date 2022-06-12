@@ -26,7 +26,7 @@ if ('cache_warmup/warmup' == rex_be_controller::getCurrentPage()) {
     foreach ($chunksConfig as $k => $v) {
         $numOfItems = round($executionTime * $v['ratio']);
 
-        if ($numOfItems > $v['max'] || 0 === $executionTime) {
+        if ($numOfItems > $v['max']) {
             // limit to max value
             // hint: executionTime === 0 equates to infinite!
             $this->setConfig($k, $v['max']);
@@ -53,7 +53,7 @@ if (rex::isBackend() && rex::getUser() && false !== strpos(rex_be_controller::ge
 
 // switch REDAXO to frontend mode before generating cache files
 // this is essential to include content modification by addons, e.g. slice status on/off
-rex_extension::register('PACKAGES_INCLUDED', static function (rex_extension_point $ep) {
+rex_extension::register('PACKAGES_INCLUDED', static function () {
     if ('cache_warmup/generator' == rex_be_controller::getCurrentPage()) {
         rex::setProperty('redaxo', false);
     }

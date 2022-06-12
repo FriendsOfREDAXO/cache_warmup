@@ -8,11 +8,10 @@ class cache_warmup_generator_images extends cache_warmup_generator
     /**
      * Generate cache for given items.
      *
-     * @throws rex_sql_exception
-     *
+     * @param array $items
      * @return array
      */
-    public function generateCache(array $items)
+    public function generateCache(array $items): array
     {
         if (rex_addon::get('media_manager')->isAvailable()) {
             foreach ($items as $item) {

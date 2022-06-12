@@ -13,7 +13,7 @@ abstract class cache_warmup_generator
      *
      * @return array
      */
-    public static function prepareItems($items)
+    public static function prepareItems(string $items): array
     {
         $itemsArray = explode(',', $items);
         $filteredItemsArray = [];

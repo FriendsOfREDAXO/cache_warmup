@@ -18,9 +18,10 @@ abstract class cache_warmup_writer
     /**
      * Build JSON object from array.
      *
+     * @param array $items
      * @return string
      */
-    public static function buildJSON(array $items)
+    public static function buildJSON(array $items): string
     {
         return json_encode($items);
     }
