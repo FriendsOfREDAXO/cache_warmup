@@ -333,14 +333,8 @@ abstract class cache_warmup_selector
         if (rex_addon::get('structure')->isAvailable()) {
             $query = 'SELECT a.id, a.clang_id FROM '.rex::getTable('article').' AS a INNER JOIN '.rex::getTable(
                     'clang'
-                ).' AS c ON a.clang_id = c.id WHERE a.status = ?';
-            $params = [1];
-
-            // if clang has status on/off (REX >=5.1), adjust query to select online pages only
-            if (method_exists('rex_clang', 'isOnline')) {
-                $query .= ' AND c.status = ?';
-                $params = [1, 1];
-            }
+                ).' AS c ON a.clang_id = c.id WHERE a.status = ? AND c.status = ?';
+            $params = [1, 1];
 
             $sql = rex_sql::factory();
             return $sql->getArray($query, $params, PDO::FETCH_NUM);
