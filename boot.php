@@ -3,7 +3,7 @@
 /** @var rex_addon $this */
 
 // set/update config on warmup page (popup)
-if ('cache_warmup/warmup' == rex_be_controller::getCurrentPage()) {
+if ('cache_warmup/warmup' === rex_be_controller::getCurrentPage()) {
     // chunk size config
     // min: min number of items to generate per request
     // max: max number of items to generate per request
@@ -14,9 +14,9 @@ if ('cache_warmup/warmup' == rex_be_controller::getCurrentPage()) {
     ];
 
     // get `max_execution_time`
-    // if it’s false, set to a low value
-    $executionTime = ini_get('max_execution_time');
-    if (false === $executionTime) {
+    // if it’s 0 (false), set to a low value
+    $executionTime = (int) ini_get('max_execution_time');
+    if (0 === $executionTime) {
         $executionTime = 30;
     }
 
@@ -41,7 +41,7 @@ if ('cache_warmup/warmup' == rex_be_controller::getCurrentPage()) {
 }
 
 // inject addon ressources
-if (rex::isBackend() && rex::getUser() && false !== strpos(rex_be_controller::getCurrentPage(), 'cache_warmup')) {
+if (rex::isBackend() && !is_null(rex::getUser()) && false !== strpos(rex_be_controller::getCurrentPage(), 'cache_warmup')) {
     if ('warmup' == rex_be_controller::getCurrentPagePart(2)) {
         rex_view::addJsFile($this->getAssetsUrl('js/handlebars.min.js'));
         rex_view::addJsFile($this->getAssetsUrl('js/timer.jquery.min.js'));
@@ -54,7 +54,7 @@ if (rex::isBackend() && rex::getUser() && false !== strpos(rex_be_controller::ge
 // switch REDAXO to frontend mode before generating cache files
 // this is essential to include content modification by addons, e.g. slice status on/off
 rex_extension::register('PACKAGES_INCLUDED', static function () {
-    if ('cache_warmup/generator' == rex_be_controller::getCurrentPage()) {
+    if ('cache_warmup/generator' === rex_be_controller::getCurrentPage()) {
         rex::setProperty('redaxo', false);
     }
 }, rex_extension::EARLY);
