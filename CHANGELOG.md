@@ -1,6 +1,14 @@
 # Changelog: Cache Warmup
 
 
+## [4.0.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/4.0.0) – 02.07.2022
+
+### Breaking changes
+
+* Erfordert REDAXO 5.4 und PHP 7.4 als Mindestversionen  
+  Alter Code wurde entfernt, um die Komplexität zu verringern! 🦊
+
+
 ## [3.7.1](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/3.7.1) – 12.06.2022
 
 ### Bugfixes
