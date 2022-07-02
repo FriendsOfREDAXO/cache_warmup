@@ -29,7 +29,7 @@ if (!$proceed) {
 } else {
     // generate page cache
     $pages = rex_get('pages', 'string');
-    if (!empty($pages)) {
+    if (strlen($pages) > 0) {
         $generator = new cache_warmup_generator_pages();
         $items = cache_warmup_generator::prepareItems($pages);
         $generator->generateCache($items);
@@ -37,7 +37,7 @@ if (!$proceed) {
 
     // generate image cache
     $images = rex_get('images', 'string');
-    if (!empty($images)) {
+    if (strlen($images) > 0) {
         $generator = new cache_warmup_generator_images();
         $items = cache_warmup_generator::prepareItems($images);
         $items = cache_warmup_selector::getImageNames($items);

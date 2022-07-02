@@ -18,10 +18,8 @@ abstract class cache_warmup_generator
         $itemsArray = explode(',', $items);
         $filteredItemsArray = [];
 
-        if (count($itemsArray) > 0) {
-            foreach ($itemsArray as $item) {
-                $filteredItemsArray[] = explode('.', $item);
-            }
+        foreach ($itemsArray as $item) {
+            $filteredItemsArray[] = explode('.', $item);
         }
 
         return $filteredItemsArray;

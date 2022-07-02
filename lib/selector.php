@@ -59,10 +59,10 @@ abstract class cache_warmup_selector
             $sql->setQuery('SELECT '.$select.' FROM '.rex::getTablePrefix().'article_slice');
             foreach ($sql as $row) {
                 foreach (range(1, 10) as $num) {
-                    if (!empty($row->getValue('media'.$num))) {
+                    if (is_string($row->getValue('media'.$num))) {
                         $images[] = $row->getValue('media'.$num);
                     }
-                    if (!empty($row->getValue('medialist'.$num))) {
+                    if (is_string($row->getValue('medialist'.$num))) {
                         $files = explode(',', $row->getValue('medialist'.$num));
                         foreach ($files as $file) {
                             $images[] = $file;
@@ -180,7 +180,7 @@ abstract class cache_warmup_selector
 
         foreach ($items as $item) {
             $media = rex_media::get($item);
-            if ($media) {
+            if (!is_null($media)) {
                 if ($media->isImage()) {
                     $filteredImages[] = $item;
                 }
@@ -204,7 +204,7 @@ abstract class cache_warmup_selector
 
         foreach ($items as $item) {
             $media = rex_media::get($item[0]);
-            if ($media) {
+            if (!is_null($media)) {
                 if ($media->isImage()) {
                     $filteredImages[] = [(int) $media->getId(), $item[1]];
                 }
@@ -270,7 +270,7 @@ abstract class cache_warmup_selector
         if (count($images) > 0 && count($mediaTypes) > 0) {
             foreach ($images as $image) {
                 $media = rex_media::get($image);
-                if ($media) {
+                if (!is_null($media)) {
                     if ($media->isImage()) {
                         foreach ($mediaTypes as $type) {
                             // EP to control cache generation
@@ -333,14 +333,8 @@ abstract class cache_warmup_selector
         if (rex_addon::get('structure')->isAvailable()) {
             $query = 'SELECT a.id, a.clang_id FROM '.rex::getTable('article').' AS a INNER JOIN '.rex::getTable(
                     'clang'
-                ).' AS c ON a.clang_id = c.id WHERE a.status = ?';
-            $params = [1];
-
-            // if clang has status on/off (REX >=5.1), adjust query to select online pages only
-            if (method_exists('rex_clang', 'isOnline')) {
-                $query .= ' AND c.status = ?';
-                $params = [1, 1];
-            }
+                ).' AS c ON a.clang_id = c.id WHERE a.status = ? AND c.status = ?';
+            $params = [1, 1];
 
             $sql = rex_sql::factory();
             return $sql->getArray($query, $params, PDO::FETCH_NUM);
