@@ -27,11 +27,10 @@ pages:
             readme: { title: translate:page_readme, subPath: README.md }
 
 requires:
-    redaxo: '^5.2'
-    php: '>=7.1'
+    redaxo: '^5.4'
+    php: '>=7.4'
 
 # define conflicts: prevents packages from update to avoid breaking changes
-# https://github.com/FriendsOfREDAXO/cache_warmup/pull/55#issuecomment-280906737
 conflicts:
     packages:
         media_manager: '>=3'
