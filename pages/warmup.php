@@ -1,5 +1,8 @@
 <?php
 
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_selector;
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_writer;
+
 /* set up base structure */
 
 $body = '

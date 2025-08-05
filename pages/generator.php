@@ -11,6 +11,12 @@
  * - Page will return blank if stuff works out as expected.
  */
 
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_generator;
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_generator_images;
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_generator_pages;
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_selector;
+use FriendsOfRedaxo\CacheWarmup\cache_warmup_writer;
+
 $proceed = true;
 
 if (class_exists('rex_csrf_token')) {

@@ -1,5 +1,7 @@
 <?php
 
+namespace FriendsOfRedaxo\CacheWarmup;
+
 /**
  * Class cache_warmup_generator_images.
  */
