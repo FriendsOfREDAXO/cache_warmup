@@ -1,7 +1,7 @@
 <?php
 
-use FriendsOfRedaxo\CacheWarmup\cache_warmup_selector;
-use FriendsOfRedaxo\CacheWarmup\cache_warmup_writer;
+use FriendsOfRedaxo\CacheWarmup\CacheWarmupSelector;
+use FriendsOfRedaxo\CacheWarmup\CacheWarmupWriter;
 
 /* set up base structure */
 
@@ -23,7 +23,7 @@ $fragment->setVar('footer', $footer, false);
 echo $fragment->parse('core/page/section.php');
 
 /* cache warmup items JSON */
-echo '<script>var cacheWarmupItems = ' . cache_warmup_writer::buildJSON(cache_warmup_selector::prepareCacheItems(true, true)) . ';</script>';
+echo '<script>var cacheWarmupItems = ' . CacheWarmupWriter::buildJSON(CacheWarmupSelector::prepareCacheItems(true, true)) . ';</script>';
 
 /* CSRF token (REX 5.5+) */
 if (class_exists('rex_csrf_token')) {

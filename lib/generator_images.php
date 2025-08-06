@@ -3,9 +3,9 @@
 namespace FriendsOfRedaxo\CacheWarmup;
 
 /**
- * Class cache_warmup_generator_images.
+ * Class CacheWarmupGeneratorImages.
  */
-class cache_warmup_generator_images extends cache_warmup_generator
+class CacheWarmupGeneratorImages extends CacheWarmupGenerator
 {
     /**
      * Generate cache for given items.

@@ -3,9 +3,9 @@
 namespace FriendsOfRedaxo\CacheWarmup;
 
 /**
- * Class cache_warmup_writer.
+ * Class CacheWarmupWriter.
  */
-abstract class cache_warmup_writer
+abstract class CacheWarmupWriter
 {
     /**
      * Clear output (show blank page).

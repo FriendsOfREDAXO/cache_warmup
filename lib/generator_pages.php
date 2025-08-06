@@ -3,9 +3,9 @@
 namespace FriendsOfRedaxo\CacheWarmup;
 
 /**
- * Class cache_warmup_generator_pages.
+ * Class CacheWarmupGeneratorPages.
  */
-class cache_warmup_generator_pages extends cache_warmup_generator
+class CacheWarmupGeneratorPages extends CacheWarmupGenerator
 {
     /**
      * Generate cache for given items.

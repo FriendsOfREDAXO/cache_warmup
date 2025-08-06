@@ -3,9 +3,9 @@
 namespace FriendsOfRedaxo\CacheWarmup;
 
 /**
- * Class cache_warmup_generator.
+ * Class CacheWarmupGenerator.
  */
-abstract class cache_warmup_generator
+abstract class CacheWarmupGenerator
 {
     /**
      * Prepare items in query string
