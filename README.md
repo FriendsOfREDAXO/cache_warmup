@@ -4,6 +4,46 @@ Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performan
 
 ![Screenshot](https://raw.githubusercontent.com/FriendsOfREDAXO/cache-warmup/assets/cache-warmup.png)
 
+## Migration Notes (Version 5.0)
+
+**Breaking Changes:** In version 5.0, the class naming structure has been updated to follow PSR-1 conventions and a new namespace structure:
+
+**New Namespace Structure:**
+- Classes are now in the `FriendsOfRedaxo\CacheWarmup` namespace
+- Class names have been simplified:
+  - `cache_warmup_generator` → `FriendsOfRedaxo\CacheWarmup\Generator`
+  - `cache_warmup_generator_images` → `FriendsOfRedaxo\CacheWarmup\GeneratorImages`
+  - `cache_warmup_generator_pages` → `FriendsOfRedaxo\CacheWarmup\GeneratorPages`
+  - `cache_warmup_selector` → `FriendsOfRedaxo\CacheWarmup\Selector`
+  - `cache_warmup_writer` → `FriendsOfRedaxo\CacheWarmup\Writer`
+
+**Backward Compatibility:**
+For easier migration, deprecated wrapper classes are provided in `lib/deprecated/` until the next major release:
+- `cache_warmup_generator` (extends `FriendsOfRedaxo\CacheWarmup\Generator`)
+- `cache_warmup_generator_images` (extends `FriendsOfRedaxo\CacheWarmup\GeneratorImages`)
+- `cache_warmup_generator_pages` (extends `FriendsOfRedaxo\CacheWarmup\GeneratorPages`)
+- `cache_warmup_selector` (extends `FriendsOfRedaxo\CacheWarmup\Selector`)
+- `cache_warmup_writer` (extends `FriendsOfRedaxo\CacheWarmup\Writer`)
+
+**Migration Guide:**
+Update your code to use the new namespaced classes:
+
+```php
+// Old (deprecated)
+$generator = new cache_warmup_generator_pages();
+$items = cache_warmup_generator::prepareItems($pages);
+cache_warmup_writer::clearOutput();
+
+// New (recommended)
+use FriendsOfRedaxo\CacheWarmup\GeneratorPages;
+use FriendsOfRedaxo\CacheWarmup\Generator;
+use FriendsOfRedaxo\CacheWarmup\Writer;
+
+$generator = new GeneratorPages();
+$items = Generator::prepareItems($pages);
+Writer::clearOutput();
+```
+
 ## Wofür wird das Addon benötigt?
 
 Manchmal hinterlegt man eine Website zur Ansicht auf einem Testserver. Häufig wird davor oder danach der REDAXO-Cache gelöscht, um veraltete Inhalte zu entfernen, die vielleicht noch aus der Entwicklungszeit enthalten sind. Danach allerdings müssen alle Inhalte neu generiert werden. REDAXO übernimmt dies eigenständig beim Aufruf jeder Seite.

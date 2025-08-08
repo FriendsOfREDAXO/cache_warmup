@@ -11,11 +11,11 @@
  * - Page will return blank if stuff works out as expected.
  */
 
-use FriendsOfRedaxo\CacheWarmup\CacheWarmupGenerator;
-use FriendsOfRedaxo\CacheWarmup\CacheWarmupGeneratorImages;
-use FriendsOfRedaxo\CacheWarmup\CacheWarmupGeneratorPages;
-use FriendsOfRedaxo\CacheWarmup\CacheWarmupSelector;
-use FriendsOfRedaxo\CacheWarmup\CacheWarmupWriter;
+use FriendsOfRedaxo\CacheWarmup\Generator;
+use FriendsOfRedaxo\CacheWarmup\GeneratorImages;
+use FriendsOfRedaxo\CacheWarmup\GeneratorPages;
+use FriendsOfRedaxo\CacheWarmup\Selector;
+use FriendsOfRedaxo\CacheWarmup\Writer;
 
 $proceed = true;
 
@@ -36,21 +36,21 @@ if (!$proceed) {
     // generate page cache
     $pages = rex_get('pages', 'string');
     if (strlen($pages) > 0) {
-        $generator = new CacheWarmupGeneratorPages();
-        $items = CacheWarmupGenerator::prepareItems($pages);
+        $generator = new GeneratorPages();
+        $items = Generator::prepareItems($pages);
         $generator->generateCache($items);
     }
 
     // generate image cache
     $images = rex_get('images', 'string');
     if (strlen($images) > 0) {
-        $generator = new CacheWarmupGeneratorImages();
-        $items = CacheWarmupGenerator::prepareItems($images);
-        $items = CacheWarmupSelector::getImageNames($items);
+        $generator = new GeneratorImages();
+        $items = Generator::prepareItems($images);
+        $items = Selector::getImageNames($items);
         $generator->generateCache($items);
     }
 
     // clear output
-    CacheWarmupWriter::clearOutput();
+    Writer::clearOutput();
     rex_response::setStatus(rex_response::HTTP_OK);
 }

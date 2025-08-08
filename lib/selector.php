@@ -3,10 +3,10 @@
 namespace FriendsOfRedaxo\CacheWarmup;
 
 /**
- * Class CacheWarmupSelector
+ * Class Selector
  * Selects images, media types, pages and languages.
  */
-abstract class CacheWarmupSelector
+abstract class Selector
 {
     /**
      * Prepare all cache items.
