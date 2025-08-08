@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . '/../writer.php';
+
 /**
  * @deprecated 5.0.0 Use FriendsOfRedaxo\CacheWarmup\Writer instead
  */
