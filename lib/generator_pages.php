@@ -1,9 +1,11 @@
 <?php
 
+namespace FriendsOfRedaxo\CacheWarmup;
+
 /**
- * Class cache_warmup_generator_pages.
+ * Class GeneratorPages.
  */
-class cache_warmup_generator_pages extends cache_warmup_generator
+class GeneratorPages extends Generator
 {
     /**
      * Generate cache for given items.

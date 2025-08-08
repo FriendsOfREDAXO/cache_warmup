@@ -1,9 +1,11 @@
 <?php
 
+namespace FriendsOfRedaxo\CacheWarmup;
+
 /**
- * Class cache_warmup_generator.
+ * Class Generator.
  */
-abstract class cache_warmup_generator
+abstract class Generator
 {
     /**
      * Prepare items in query string

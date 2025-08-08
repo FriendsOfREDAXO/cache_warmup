@@ -11,6 +11,12 @@
  * - Page will return blank if stuff works out as expected.
  */
 
+use FriendsOfRedaxo\CacheWarmup\Generator;
+use FriendsOfRedaxo\CacheWarmup\GeneratorImages;
+use FriendsOfRedaxo\CacheWarmup\GeneratorPages;
+use FriendsOfRedaxo\CacheWarmup\Selector;
+use FriendsOfRedaxo\CacheWarmup\Writer;
+
 $proceed = true;
 
 if (class_exists('rex_csrf_token')) {
@@ -30,21 +36,21 @@ if (!$proceed) {
     // generate page cache
     $pages = rex_get('pages', 'string');
     if (strlen($pages) > 0) {
-        $generator = new cache_warmup_generator_pages();
-        $items = cache_warmup_generator::prepareItems($pages);
+        $generator = new GeneratorPages();
+        $items = Generator::prepareItems($pages);
         $generator->generateCache($items);
     }
 
     // generate image cache
     $images = rex_get('images', 'string');
     if (strlen($images) > 0) {
-        $generator = new cache_warmup_generator_images();
-        $items = cache_warmup_generator::prepareItems($images);
-        $items = cache_warmup_selector::getImageNames($items);
+        $generator = new GeneratorImages();
+        $items = Generator::prepareItems($images);
+        $items = Selector::getImageNames($items);
         $generator->generateCache($items);
     }
 
     // clear output
-    cache_warmup_writer::clearOutput();
+    Writer::clearOutput();
     rex_response::setStatus(rex_response::HTTP_OK);
 }

@@ -1,9 +1,11 @@
 <?php
 
+namespace FriendsOfRedaxo\CacheWarmup;
+
 /**
- * Class cache_warmup_generator_images.
+ * Class GeneratorImages.
  */
-class cache_warmup_generator_images extends cache_warmup_generator
+class GeneratorImages extends Generator
 {
     /**
      * Generate cache for given items.

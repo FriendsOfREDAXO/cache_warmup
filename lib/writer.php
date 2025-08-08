@@ -1,9 +1,11 @@
 <?php
 
+namespace FriendsOfRedaxo\CacheWarmup;
+
 /**
- * Class cache_warmup_writer.
+ * Class Writer.
  */
-abstract class cache_warmup_writer
+abstract class Writer
 {
     /**
      * Clear output (show blank page).
