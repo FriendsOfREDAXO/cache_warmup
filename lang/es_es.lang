@@ -12,7 +12,7 @@ cache_warmup_pages_title     = Generar páginas
 cache_warmup_pages_progress  = Página <span class = "cache-warmup__target__progress-from">1</span> de <span class = "cache-warmup__target__progress-to">...</span>
 
 cache_warmup_images_title    = Generando imágenes...
-cache_warmup_images_progress = Imagen <span class="cache-warmup__target__progress-from">1</span> de <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images_progress = Imagen <span class="cache-warmup__target__progress-from">0</span> de <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_time_elapsed    = Tiempo transcurrido
 

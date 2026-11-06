@@ -9,15 +9,15 @@ cache_warmup_button_cancel   = Cancel
 cache_warmup_button_again    = Try again
 
 cache_warmup_pages_title     = Generating pages…
-cache_warmup_pages_progress  = Page <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_pages_progress  = Page pass <span class="cache-warmup__target__progress-from">0</span> of <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_images_title    = Generating images…
-cache_warmup_images_progress = Image <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images_progress = Image variant <span class="cache-warmup__target__progress-from">0</span> of <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_time_elapsed    = Time elapsed
 
 cache_warmup_finished_title  = Finished: cache prepared.
-cache_warmup_finished_text   = <p>The cache has been prepared for <strong><span class="cache-warmup__target__finished-pages-num">pages</span> <span class="cache-warmup__target__finished-join">and</span> <span class="cache-warmup__target__finished-images-num">images</span></strong>. It took some <strong class="cache-warmup__target__finished-time-num"></strong> and will save users from waiting too long when calling up the website for the first time.</p>
+cache_warmup_finished_text   = <p>The cache has been prepared for <strong><span class="cache-warmup__target__finished-pages-num">page passes</span> <span class="cache-warmup__target__finished-join">and</span> <span class="cache-warmup__target__finished-images-num">image variants</span></strong>. It took some <strong class="cache-warmup__target__finished-time-num"></strong> including passes for the individual image formats. Check the affected frontend pages once afterwards.</p>
 
 cache_warmup_error_title     = Damn, something went wrong!
 cache_warmup_error_text      = <p>An error occured while generating the cache. Find details on the error page. We appreciate any support in improving the addon quality if you report issues at <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues">Github</a>. Thank you!</p>

@@ -4,40 +4,10 @@
 
 // set/update config on warmup page (popup)
 if ('cache_warmup/warmup' === rex_be_controller::getCurrentPage()) {
-    // chunk size config
-    // min: min number of items to generate per request
-    // max: max number of items to generate per request
-    // ratio: multiplies with execution time to define number of items to generate per request
-    $chunksConfig = [
-        'chunkSizeImages' => ['min' => 10, 'max' => 50, 'ratio' => 0.4],
-        'chunkSizePages' => ['min' => 100, 'max' => 1000, 'ratio' => 6],
-    ];
-
-    // get `max_execution_time`
-    // if it’s 0 (false), set to a low value
-    $executionTime = (int) ini_get('max_execution_time');
-    if (0 === $executionTime) {
-        $executionTime = 30;
-    }
-
-    // define number of items to generate per single request based on `max_execution_time`
-    // higher values reduce number of requests but extend script time
-    // (hint: enable debug mode in REDAXO to report execution times)
-    foreach ($chunksConfig as $k => $v) {
-        $numOfItems = round($executionTime * $v['ratio']);
-
-        if ($numOfItems > $v['max']) {
-            // limit to max value
-            // hint: executionTime === 0 equates to infinite!
-            $this->setConfig($k, $v['max']);
-        } elseif ($numOfItems < $v['min']) {
-            // limit to min value
-            $this->setConfig($k, $v['min']);
-        } else {
-            // set to calculated number of items
-            $this->setConfig($k, $numOfItems);
-        }
-    }
+    // A cold page can synchronously generate dozens of image sizes. Keep each
+    // article/profile and image/type/profile in its own serial HTTP request.
+    $this->setConfig('chunkSizePages', 1);
+    $this->setConfig('chunkSizeImages', 1);
 }
 
 // inject addon ressources

@@ -9,15 +9,15 @@ cache_warmup_button_cancel   = Abbrechen
 cache_warmup_button_again    = Nochmal versuchen
 
 cache_warmup_pages_title     = Generiere Seiten…
-cache_warmup_pages_progress  = Seite <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_pages_progress  = Seitendurchlauf <span class="cache-warmup__target__progress-from">0</span> von <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_images_title    = Generiere Bilder…
-cache_warmup_images_progress = Bild <span class="cache-warmup__target__progress-from">1</span> von <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images_progress = Bildvariante <span class="cache-warmup__target__progress-from">0</span> von <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_time_elapsed    = Verstrichene Zeit
 
 cache_warmup_finished_title  = Fertig: Cache generiert
-cache_warmup_finished_text   = <p>Der Cache wurde für <strong><span class="cache-warmup__target__finished-pages-num">Seiten</span> <span class="cache-warmup__target__finished-join">und</span> <span class="cache-warmup__target__finished-images-num">Bilder</span></strong> vorbereitet. Das hat etwa <strong class="cache-warmup__target__finished-time-num"></strong> gedauert und sorgt dafür, dass nun niemand mehr bei den ersten Seitenaufrufen unnötig lange warten muss.</p>
+cache_warmup_finished_text   = <p>Der Cache wurde für <strong><span class="cache-warmup__target__finished-pages-num">Seitendurchläufe</span> <span class="cache-warmup__target__finished-join">und</span> <span class="cache-warmup__target__finished-images-num">Bildvarianten</span></strong> vorbereitet. Das hat etwa <strong class="cache-warmup__target__finished-time-num"></strong> gedauert. Die Zahlen enthalten die Durchläufe für die jeweiligen Bildformate. Prüfe die betroffenen Frontend-Seiten anschließend einmal im Browser.</p>
 
 cache_warmup_error_title     = Verdammt, etwas ist schief gelaufen!
 cache_warmup_error_text      = <p>Beim Erzeugen des Caches ist ein Fehler aufgetreten. Details befinden sich auf der Fehlerseite. Wir freuen uns über jede Mithilfe, die Qualität des Addons zu verbessern, indem Fehler bei <a href="https://github.com/FriendsOfREDAXO/cache_warmup/issues">Github</a> gemeldet werden. Vielen Dank!</p>

@@ -1,6 +1,20 @@
 # Cache-Warmup
 
-Generiert den Cache vorab, so dass die Website bereits beim Erstaufruf performant läuft.
+Bereitet REDAXO-Artikel und erfasste Media-Manager-Varianten für die ersten Frontend-Aufrufe vor.
+
+## Artikel, Bilder und Ausgabeformate
+
+Der Seitengenerator setzt für jeden Artikel die aktuelle Artikel-ID und Sprache, damit auch Templates und Module mit `rex_article::getCurrent()` den richtigen Inhalt rendern. Der vorherige Kontext wird nach dem Durchlauf wiederhergestellt, auch bei einem Fehler.
+
+Die Bilderfassung berücksichtigt zusätzlich verschachtelte JSON-Medienfelder `REX_MEDIA_…` und `REX_MEDIALIST_…` in `value1` bis `value10`, etwa aus MForm/MBlock. SVG/SVGZ werden nicht automatisch mit sämtlichen Raster-Medientypen kombiniert, da die GD-Effekte des Media Managers sie nicht dekodieren können. Gezielte SVG-/Medientyp-Paare können weiterhin über `CACHE_WARMUP_IMAGES_WITH_MEDIATYPES` ergänzt werden.
+
+**Media Negotiator ist optional.** Ohne verfügbaren Media Negotiator verwendet der Warmup die bisherigen Artikel-/Sprach- und Bild-/Medientyp-Einträge, ohne zusätzliche Formatdurchläufe oder Änderungen an den Request-Headern. Es wird keine weitere Paketabhängigkeit benötigt. Bei verfügbarem Media Negotiator mit den unterstützten Format-APIs werden Originalformat, WebP und gegebenenfalls AVIF getrennt vorbereitet, entsprechend den Serverfähigkeiten und den Einstellungen `disable_avif` und `preferred_format`. Die bestehenden Extension Points erhalten weiterhin die bisherigen zweispaltigen Listen; die Formatdurchläufe werden erst danach ergänzt.
+
+Die Fortschrittsanzeige zählt bestätigte Seitendurchläufe und Bildvarianten. Eine Bildvariante entspricht einem Bild mit einem Medientyp und gegebenenfalls einem Formatprofil. Bei mehreren Profilen steigen deshalb die angezeigten Zahlen. Standardmäßig wird ein Eintrag pro Request verarbeitet, da bereits ein einzelnes Template zahlreiche Bildgrößen synchron erzeugen kann. Der Warmup kann dadurch länger dauern, während die einzelnen Requests kürzer bleiben.
+
+Fehlgeschlagene Cache-Schreibvorgänge und ungültige Generatorantworten stoppen den Lauf. Die Fehlermeldung enthält die Generator-URL; serverseitige Laufzeitfehler werden im REDAXO-Systemlog protokolliert. Ein abgebrochener Lauf ist kein vollständiger Warmup. Bereits erzeugte Caches bleiben erhalten und werden beim nächsten Lauf wiederverwendet.
+
+Der Warmup führt interne Template- und Media-Manager-Aufrufe aus. Er ist kein vollständiger öffentlicher HTTP-/Browser-Crawl: Domain-, URI-, Session- und benutzerabhängige Sonderfälle sowie beliebige Bildquellen aus HTML oder eigenen Tabellen können zusätzliche Extension-Point-Einträge erfordern.
 
 ![Screenshot](https://raw.githubusercontent.com/FriendsOfREDAXO/cache-warmup/assets/cache-warmup.png)
 
@@ -35,16 +49,15 @@ __Ursache:__
 Das Generieren des Caches dauert zu lange, so dass die maximale Skriptlaufzeit (max\_execution\_time) des Webservers überschritten wird. Cache-Warmup versucht zwar, abhängig von der Skriptlaufzeit den Cache in kleinen Schritten zu generieren, aber manchmal — etwa bei sehr großen Bildern im Medienpool oder aufwendigen Templates/Modulen — sind selbst kleine Schritte noch zu groß.
 
 __Maßnahmen:__  
-Du kannst Cache-Warmup verlangsamen, indem du diesen Code-Schnipsel in die `boot.php` des project-AddOns steckst. Der Wert für `$throttle` entspricht der Geschwindigkeit (1–100 in Prozent) und kann von dir angepasst werden. Im Code-Schnipsel wird beispielhaft mit 50% gearbeitet, so dass Cache-Warmup nur noch halb so schnell arbeitet wie üblich:
+Standardmäßig wird pro Request nur ein Artikel-/Sprach-/Formatdurchlauf bzw. eine Bild-/Medientyp-/Formatkombination verarbeitet. Wenn bereits ein einzelner Eintrag die Servergrenze überschreitet, kann eine kleinere Paketgröße das Problem nicht weiter lösen. Prüfe dann das betroffene Template oder Bild anhand der angezeigten Generator-URL und des Systemlogs.
+
+Bei bekannt kurzen Laufzeiten können die Paketgrößen weiterhin über `PACKAGES_INCLUDED` angepasst werden:
 
 ```php
-// decelerate Cache Warmup addOn
-rex_extension::register('PACKAGES_INCLUDED', function () {   
+rex_extension::register('PACKAGES_INCLUDED', static function () {
     $addon = rex_addon::get('cache_warmup');
-    $throttle = 50; // percent %
-
-    $addon->setConfig('chunkSizeImages', ceil($addon->getConfig('chunkSizeImages') * $throttle / 100));
-    $addon->setConfig('chunkSizePages', ceil($addon->getConfig('chunkSizePages') * $throttle / 100));
+    $addon->setConfig('chunkSizePages', 1);
+    $addon->setConfig('chunkSizeImages', 5);
 });
 ```
 
@@ -266,6 +279,6 @@ rex_extension::register('CACHE_WARMUP_IMAGES_WITH_MEDIATYPES', function (rex_ext
 1. Es werden alle __Bilder__ erfasst, die in __Modulen, Metainfos und yforms__ verwendet werden, sowie alle definierten __MediaTypes__ des Media Managers. Verschiedene Extension Points (EPs) ermöglichen, die Liste der ausgewählten Bilder und MediaTypes zu bearbeiten, um zu kontrollieren, welche Cachefiles erstellt werden.
 2. Es werden alle __Seiten__ erfasst, die online sind, sowie alle __Sprachen__. Verschiedene Extension Points (EPs) ermöglichen, die Liste zu bearbeiten.
 3. Aus den erfassten Daten wird __ein großes Array erstellt__ mit Einträgen für jedes Bild mit jedem MediaType und jeder Seite in jeder Sprache. Beispiel: 10 Bilder mit 5 MediaTypes = 50 Bilder. 100 Seiten in 3 Sprachen = 300 Seiten.
-4. Das große Array wird danach in viele Häppchen zerhackt, deren Größe von der __Skriptlaufzeit des Servers__ abhängt. Damit kann später gesteuert werden, wie viele Cachefiles bei jedem Request erstellt werden. Bilder benötigen dabei natürlich massiv mehr Serverressourcen als Seiten.
+4. Artikel-/Sprach- und Bild-/Medientyp-Einträge werden bei verfügbarer Formatverhandlung um die benötigten Formatprofile erweitert und standardmäßig einzeln pro Request verarbeitet. Damit kann später gesteuert werden, wie viele Cachefiles bei jedem Request erstellt werden. Bilder benötigen dabei natürlich massiv mehr Serverressourcen als Seiten.
 5. Das Array wird __als JSON im HTML des Popups__ ausgegeben, das das Generieren des Caches triggert, den Fortschritt zeigt und Infos ausgibt. Das Popup __parst das JSON__ und sendet __häppchenweise AJAX-Requests an einen Generator__.
 6. Der Generator erstellt die Cachefiles für Bilder und Seiten. Die Angaben dazu, welche Bilder mit welchen Mediatypen und welche Seiten in welchen Sprachen erstellt werden sollen, befinden sich im __Query string__ der URL jedes AJAX-Request.
