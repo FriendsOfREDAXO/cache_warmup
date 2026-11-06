@@ -24,6 +24,10 @@ abstract class cache_warmup_selector
             $images['items'] = self::getImageIds($images['items']);
         }
 
+        // Expand after the existing EPs and ID conversion; their two-column API stays intact.
+        $pages = cache_warmup_profiles::expand($pages);
+        $images = cache_warmup_profiles::expand($images);
+
         // chunk items
         if ($chunk) {
             $pages['items'] = self::chunk($pages['items'], rex_addon::get('cache_warmup')->getConfig('chunkSizePages'));
@@ -55,10 +59,11 @@ abstract class cache_warmup_selector
 
             /* find images in pages (media1-10, medialist1-10) */
 
-            $select = 'media1,media2,media3,media4,media5,media6,media7,media8,media9,media10,medialist1,medialist2,medialist3,medialist4,medialist5,medialist6,medialist7,medialist8,medialist9,medialist10';
+            $select = 'media1,media2,media3,media4,media5,media6,media7,media8,media9,media10,medialist1,medialist2,medialist3,medialist4,medialist5,medialist6,medialist7,medialist8,medialist9,medialist10,value1,value2,value3,value4,value5,value6,value7,value8,value9,value10';
             $sql->setQuery('SELECT '.$select.' FROM '.rex::getTablePrefix().'article_slice');
             foreach ($sql as $row) {
                 foreach (range(1, 10) as $num) {
+                    $images = array_merge($images, cache_warmup_media_values::extract($row->getValue('value'.$num)));
                     if (is_string($row->getValue('media'.$num))) {
                         $images[] = $row->getValue('media'.$num);
                     }
@@ -90,8 +95,8 @@ abstract class cache_warmup_selector
                     $sql->setQuery('SELECT '.implode(',', array_values($fields)).' FROM  '.$table);
                     foreach ($sql as $row) {
                         foreach ($fields as $field) {
-                            $files = $row->getValue($field);
-                            if (strpos($files, ',') > 0) {
+                            $files = (string) $row->getValue($field);
+                            if (false !== strpos($files, ',')) {
                                 // is medialist
                                 foreach (explode(',', $files) as $file) {
                                     $images[] = $file;
@@ -108,7 +113,7 @@ abstract class cache_warmup_selector
             /* find images in metainfos (REX_MEDIA_WIDGET, REX_MEDIALIST_WIDGET) */
 
             if (rex_addon::get('metainfo')->isAvailable()) {
-                $metainfos = [];
+                $metainfos = ['ids' => []];
 
                 // get 'REX_MEDIA_WIDGET' and 'REX_MEDIALIST_WIDGET' ids
                 $sql->setQuery('SELECT id FROM '.rex::getTablePrefix().'metainfo_type WHERE label LIKE "REX_MEDIA%"');
@@ -117,14 +122,16 @@ abstract class cache_warmup_selector
                 }
 
                 // get field names where 'REX_MEDIA_WIDGET' and 'REX_MEDIALIST_WIDGET' are used
-                $sql->setQuery(
-                    'SELECT name FROM '.rex::getTablePrefix().'metainfo_field WHERE type_id IN ('.implode(
-                        ',',
-                        $metainfos['ids']
-                    ).')'
-                );
-                foreach ($sql as $row) {
-                    $metainfos['names'][] = $row->getValue('name');
+                if ($metainfos['ids']) {
+                    $sql->setQuery(
+                        'SELECT name FROM '.rex::getTablePrefix().'metainfo_field WHERE type_id IN ('.implode(
+                            ',',
+                            $metainfos['ids']
+                        ).')'
+                    );
+                    foreach ($sql as $row) {
+                        $metainfos['names'][] = $row->getValue('name');
+                    }
                 }
 
                 // find images in metas (article, clang, media)
@@ -140,8 +147,8 @@ abstract class cache_warmup_selector
                             foreach ($sql as $row) {
                                 foreach ($metainfos['names'] as $field) {
                                     if ($row->hasValue($field)) {
-                                        $files = $row->getValue($field);
-                                        if (strpos($files, ',') > 0) {
+                                        $files = (string) $row->getValue($field);
+                                        if (false !== strpos($files, ',')) {
                                             // is medialist
                                             foreach (explode(',', $files) as $file) {
                                                 $images[] = $file;
@@ -179,9 +186,17 @@ abstract class cache_warmup_selector
         $items = array_unique($items); // remove duplicate values
 
         foreach ($items as $item) {
+            if (!is_string($item) || '' === trim($item)) {
+                continue;
+            }
+            $item = trim($item);
             $media = rex_media::get($item);
             if (!is_null($media)) {
-                if ($media->isImage()) {
+                // SVGs are normally served directly. The automatic image/type
+                // cross product would feed them into GD resize/crop effects,
+                // which cannot decode vector images. Custom SVG/type pairs can
+                // still be added explicitly via the existing extension points.
+                if ($media->isImage() && !in_array(strtolower($media->getExtension()), ['svg', 'svgz'], true)) {
                     $filteredImages[] = $item;
                 }
                 rex_media::clearInstance($item);
@@ -208,7 +223,7 @@ abstract class cache_warmup_selector
                 if ($media->isImage()) {
                     $filteredImages[] = [(int) $media->getId(), $item[1]];
                 }
-                rex_media::clearInstance($item);
+                rex_media::clearInstance($item[0]);
             }
         }
 
@@ -226,6 +241,9 @@ abstract class cache_warmup_selector
     public static function getImageNames(array $items): array
     {
         $filteredImages = [];
+        if (!$items) {
+            return [];
+        }
 
         // filter image ids
         $imageIds = array_column($items, 0);
@@ -233,6 +251,9 @@ abstract class cache_warmup_selector
             return preg_match('/^\d+$/', $v) && (int) $v > 0; // sanitize
         });
         $imageIds = array_unique($imageIds);
+        if (!$imageIds) {
+            throw new InvalidArgumentException('No valid media IDs supplied');
+        }
 
         // fetch images names for selected ids
         $images = [];
@@ -246,7 +267,11 @@ abstract class cache_warmup_selector
 
         // loop through items and replace ids with names
         foreach ($items as $item) {
-            $filteredImages[] = [$images[$item[0]], $item[1]];
+            if (!isset($images[$item[0]])) {
+                throw new RuntimeException('Media no longer exists: ' . $item[0]);
+            }
+            $item[0] = $images[$item[0]];
+            $filteredImages[] = $item;
         }
 
         return $filteredImages;
@@ -286,7 +311,7 @@ abstract class cache_warmup_selector
                             }
                         }
                     }
-                    rex_media::clearInstance($media);
+                    rex_media::clearInstance($image);
                 }
             }
         }
@@ -384,6 +409,6 @@ abstract class cache_warmup_selector
      */
     private static function chunk(array $items, int $chunkSize): array
     {
-        return array_chunk($items, $chunkSize);
+        return array_chunk($items, max(1, $chunkSize));
     }
 }

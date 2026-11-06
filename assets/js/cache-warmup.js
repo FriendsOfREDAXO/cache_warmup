@@ -340,7 +340,7 @@
             },
 
             generateTokenParameter: function () {
-                return this._token ? "&_csrf_token=" + this._token : null;
+                return this._token ? "&_csrf_token=" + this._token : '';
             },
 
             getUrlsForType: function (type) {
@@ -353,7 +353,7 @@
                             chunk.push(this._items[type].items[i][j].join('.'));
                         }
                         urls.push({
-                            'absolute': this._generatorUrl + '&' + type + '=' + chunk.join() + this.generateTokenParameter(),
+                            'absolute': this._generatorUrl + '&' + type + '=' + encodeURIComponent(chunk.join()) + this.generateTokenParameter(),
                             'slug': type + '=' + chunk.join(),
                             'itemsNum': jmax
                         });
@@ -387,51 +387,43 @@
 
                 if (urls.length) {
 
-                    // loop through urls and send serial requests (not parallel!)
+                    // Bridge jQuery callbacks into a native promise so all errors reject the chain.
                     urls.reduce(function (p, url, index) {
                         return p.then(function () {
                             timerStart = new Date().getTime();
-                            // send request
-                            return $.ajax({
-                                    url: url.absolute,
-                                    cache: false,
-                                    beforeSend: function () {
-                                        // update components
-                                        // why not after request? because from UX view it feels better beforehand.
-                                        debug.log('---');
+                            return new Promise(function (resolve, reject) {
+                                $.ajax({url: url.absolute, cache: false, dataType: 'json'})
+                                    .done(function (data) {
+                                        if (!data || data.success !== true || data.processed !== url.itemsNum) {
+                                            var error = new Error('Generator did not confirm all cache items.');
+                                            error.url = url.absolute;
+                                            reject(error);
+                                            return;
+                                        }
                                         cachedItemsCount += url.itemsNum;
                                         that.cacheWarmup.content.setFromValue(cachedItemsCount);
                                         that.cacheWarmup.calculator.registerNextChunk(type);
                                         that.cacheWarmup.progressbar.setProgress(that.cacheWarmup.calculator.getProgress());
-                                    }
-                                })
-                                .done(function (data) {
-                                    // special: error on success (http status 200)
-                                    // media manager returns 200 even if an image cannot be generated (too big, RAM exceeded)
-                                    // we assume an error if response starts with rex-page-header
-                                    // otherwise page will return blank if stuff works out as expected
-                                    if (data.substr(0, 30) === '<header class="rex-page-header') {
-                                        debug.error('cache: request error for ' + url.slug);
-                                        that.cacheWarmup.isError('RAM exceeded', 'internal', url.absolute);
-                                        throw new Error('RAM exceeded');
-                                    }
-                                    else {
-                                        // get debug infos
                                         timerEnd = new Date().getTime();
-                                        debug.log('cache: request ' + (index + 1) + '/' + urls.length + ' (' + (timerEnd - timerStart) + ' ms) success for ' + url.slug);
                                         executionTimes.push(timerEnd - timerStart);
-                                    }
-                                })
-                                .fail(function (jqXHR, textStatus, errorThrown) {
-                                    // throw up error message, statuscode and URL to page where error occured
-                                    that.cacheWarmup.isError(errorThrown, jqXHR.status, url.absolute);
-                                    throw new Error(errorThrown);
-                                });
+                                        debug.log('cache: request ' + (index + 1) + '/' + urls.length + ' succeeded (' + (timerEnd - timerStart) + ' ms)');
+                                        resolve();
+                                    })
+                                    .fail(function (jqXHR, textStatus, errorThrown) {
+                                        var message = jqXHR.responseJSON && jqXHR.responseJSON.message;
+                                        var error = new Error(message || errorThrown || textStatus);
+                                        error.status = jqXHR.status;
+                                        error.url = url.absolute;
+                                        reject(error);
+                                    });
+                            });
                         });
                     }, Promise.resolve()).then(function () {
-                        // finished all requests
-                        debug.info('cache: finished all ' + urls.length + ' requests (' + that._calculateAverageExecutionTime(executionTimes) + ' ms average).');
+                        debug.info('cache: finished ' + urls.length + ' requests (' + that._calculateAverageExecutionTime(executionTimes) + ' ms average).');
                         callback();
+                    }).catch(function (error) {
+                        that.cacheWarmup.stopwatch.pause();
+                        that.cacheWarmup.isError(error.message, error.status || 'internal', error.url || '');
                     });
 
                 }
@@ -572,7 +564,11 @@
                 this.content.injectTemplate('footer', 'button_again');
 
                 // prepare error message details
-                var errorDetails = this.content._templates['text_error']() + '<p><code>' + message + ' (' + code + ')</code> &rarr; <a href="' + url + '">' + this.content._templates['error_link']() + '</a></p>';
+                var details = $('<p>');
+                details.append($('<code>').text(message + ' (' + code + ')'));
+                details.append(' → ');
+                details.append($('<a>').attr('href', url).text(this.content._templates['error_link']()));
+                var errorDetails = this.content._templates['text_error']() + $('<div>').append(details).html();
 
                 // inject values
                 this.content.injectTemplate('title', 'title_error');

@@ -19,7 +19,15 @@ abstract class cache_warmup_generator
         $filteredItemsArray = [];
 
         foreach ($itemsArray as $item) {
-            $filteredItemsArray[] = explode('.', $item);
+            $parts = explode('.', $item);
+            if ((2 !== count($parts) && 3 !== count($parts))
+                || !ctype_digit($parts[0]) || (int) $parts[0] < 1
+                || '' === trim($parts[1]) || preg_match('/[\x00-\x1F\x7F]/', $parts[1])
+                || false !== strpos($parts[1], '/') || false !== strpos($parts[1], '\\')
+                || (isset($parts[2]) && !in_array($parts[2], ['original', 'default', 'webp', 'avif'], true))) {
+                throw new InvalidArgumentException('Invalid cache warmup item: ' . $item);
+            }
+            $filteredItemsArray[] = $parts;
         }
 
         return $filteredItemsArray;

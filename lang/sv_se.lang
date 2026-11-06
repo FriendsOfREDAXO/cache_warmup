@@ -9,10 +9,10 @@ cache_warmup_button_cancel   = Avbryta
 cache_warmup_button_again    = Försök igen
 
 cache_warmup_pages_title     = Skapa sidor ...
-cache_warmup_pages_progress  = Sida <span class="cache-warmup__target__progress-from">1</span> från <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_pages_progress  = Sida <span class="cache-warmup__target__progress-from">0</span> från <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_images_title    = Skapa bilder ...
-cache_warmup_images_progress = Bild <span class="cache-warmup__target__progress-from">1</span> från <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images_progress = Bild <span class="cache-warmup__target__progress-from">0</span> från <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_time_elapsed    = Tiden som gått
 

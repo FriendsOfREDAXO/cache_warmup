@@ -1,5 +1,15 @@
 # Changelog: Cache Warmup
 
+## Unreleased
+
+* Globalen Artikel- und Sprachkontext pro Artikel setzen und auch nach Fehlern wiederherstellen.
+* Original-/WebP-/AVIF-Caches bei verfügbarem Media Negotiator getrennt vorbereiten; keine zusätzliche Paketabhängigkeit.
+* Verschachtelte JSON-Medienfelder in `value1`–`value10` berücksichtigen.
+* SVG/SVGZ nicht automatisch mit sämtlichen Raster-Medientypen kombinieren; gezielte Ergänzungen per Extension Point bleiben möglich.
+* Konservative Paketgrößen für aufwendige Template- und Bildgenerierung verwenden.
+* Artikel-/Bildcache-Ergebnisse und Generatorantworten prüfen; Fortschritt erst nach bestätigtem Erfolg erhöhen und bei Fehlern abbrechen.
+* Medieninstanzen anhand des Dateinamens freigeben und leere Metainfo-/Medien-ID-Abfragen abfangen.
+
 
 ## [4.0.0](https://github.com/FriendsOfREDAXO/cache_warmup/releases/tag/4.0.0) – 02.07.2022
 

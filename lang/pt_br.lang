@@ -9,10 +9,10 @@ cache_warmup_button_cancel   = Cancelar
 cache_warmup_button_again    = Tende de novo
 
 cache_warmup_pages_title     = Gerando páginas..
-cache_warmup_pages_progress  = Página <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_pages_progress  = Página <span class="cache-warmup__target__progress-from">0</span> of <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_images_title    = Gerando imagens...
-cache_warmup_images_progress = Imagem <span class="cache-warmup__target__progress-from">1</span> of <span class="cache-warmup__target__progress-to">…</span>
+cache_warmup_images_progress = Imagem <span class="cache-warmup__target__progress-from">0</span> of <span class="cache-warmup__target__progress-to">…</span>
 
 cache_warmup_time_elapsed    = Tempo decorrido
 
